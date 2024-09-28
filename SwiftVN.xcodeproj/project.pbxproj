@@ -6,6 +6,23 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		780EAEF42CA7D85B004624B3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 780EAEEC2CA7D85B004624B3 /* Preview Assets.xcassets */; };
+		780EAEF52CA7D85B004624B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 780EAEEE2CA7D85B004624B3 /* Assets.xcassets */; };
+		780EAEF62CA7D85B004624B3 /* sample.ogg in Resources */ = {isa = PBXBuildFile; fileRef = 780EAEF12CA7D85B004624B3 /* sample.ogg */; };
+		780EAEF72CA7D85B004624B3 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780EAEEA2CA7D85B004624B3 /* AudioManager.swift */; };
+		780EAEF82CA7D85B004624B3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780EAEEF2CA7D85B004624B3 /* ContentView.swift */; };
+		780EAEF92CA7D85B004624B3 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780EAEF02CA7D85B004624B3 /* Item.swift */; };
+		780EAEFA2CA7D85B004624B3 /* SwiftVNApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780EAEF22CA7D85B004624B3 /* SwiftVNApp.swift */; };
+		780EAEFD2CA7D863004624B3 /* SwiftVNTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780EAEFB2CA7D863004624B3 /* SwiftVNTests.swift */; };
+		780EAF012CA7D866004624B3 /* SwiftVNUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780EAEFE2CA7D866004624B3 /* SwiftVNUITests.swift */; };
+		780EAF022CA7D866004624B3 /* SwiftVNUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780EAEFF2CA7D866004624B3 /* SwiftVNUITestsLaunchTests.swift */; };
+		781A29B92CA7F66900234AF6 /* VLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 781A29B82CA7F66900234AF6 /* VLCKit.xcframework */; };
+		781A29BA2CA7F66900234AF6 /* VLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 781A29B82CA7F66900234AF6 /* VLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7824DE2A2CA7FE9A003383A7 /* ScriptManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7824DE292CA7FE98003383A7 /* ScriptManager.swift */; };
+		7824DE2C2CA80EF7003383A7 /* s01.scr in Resources */ = {isa = PBXBuildFile; fileRef = 7824DE2B2CA80EF7003383A7 /* s01.scr */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		780EAE522CA76483004624B3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -23,35 +40,46 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		781A29BB2CA7F66900234AF6 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				781A29BA2CA7F66900234AF6 /* VLCKit.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		780EAE3F2CA76481004624B3 /* SwiftVN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftVN.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		780EAE512CA76483004624B3 /* SwiftVNTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftVNTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		780EAE5B2CA76483004624B3 /* SwiftVNUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftVNUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		780EAEEA2CA7D85B004624B3 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
+		780EAEEC2CA7D85B004624B3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		780EAEEE2CA7D85B004624B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		780EAEEF2CA7D85B004624B3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		780EAEF02CA7D85B004624B3 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		780EAEF12CA7D85B004624B3 /* sample.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.ogg; sourceTree = "<group>"; };
+		780EAEF22CA7D85B004624B3 /* SwiftVNApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftVNApp.swift; sourceTree = "<group>"; };
+		780EAEFB2CA7D863004624B3 /* SwiftVNTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftVNTests.swift; sourceTree = "<group>"; };
+		780EAEFE2CA7D866004624B3 /* SwiftVNUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftVNUITests.swift; sourceTree = "<group>"; };
+		780EAEFF2CA7D866004624B3 /* SwiftVNUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftVNUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		781A29B02CA7DE0300234AF6 /* SwiftVN-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwiftVN-Bridging-Header.h"; sourceTree = "<group>"; };
+		781A29B82CA7F66900234AF6 /* VLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = VLCKit.xcframework; path = Carthage/Build/VLCKit.xcframework; sourceTree = "<group>"; };
+		7824DE292CA7FE98003383A7 /* ScriptManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptManager.swift; sourceTree = "<group>"; };
+		7824DE2B2CA80EF7003383A7 /* s01.scr */ = {isa = PBXFileReference; lastKnownFileType = text; path = s01.scr; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		780EAE412CA76481004624B3 /* SwiftVN */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SwiftVN;
-			sourceTree = "<group>";
-		};
-		780EAE542CA76483004624B3 /* SwiftVNTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SwiftVNTests;
-			sourceTree = "<group>";
-		};
-		780EAE5E2CA76483004624B3 /* SwiftVNUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SwiftVNUITests;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		780EAE3C2CA76481004624B3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				781A29B92CA7F66900234AF6 /* VLCKit.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,9 +103,10 @@
 		780EAE362CA76481004624B3 = {
 			isa = PBXGroup;
 			children = (
-				780EAE412CA76481004624B3 /* SwiftVN */,
-				780EAE542CA76483004624B3 /* SwiftVNTests */,
-				780EAE5E2CA76483004624B3 /* SwiftVNUITests */,
+				780EAEF32CA7D85B004624B3 /* SwiftVN */,
+				780EAEFC2CA7D863004624B3 /* SwiftVNTests */,
+				780EAF002CA7D866004624B3 /* SwiftVNUITests */,
+				781A29A72CA7DCC000234AF6 /* Frameworks */,
 				780EAE402CA76481004624B3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -92,6 +121,64 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		780EAEEB2CA7D85B004624B3 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				7824DE292CA7FE98003383A7 /* ScriptManager.swift */,
+				780EAEEA2CA7D85B004624B3 /* AudioManager.swift */,
+				781A29B02CA7DE0300234AF6 /* SwiftVN-Bridging-Header.h */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		780EAEED2CA7D85B004624B3 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				780EAEEC2CA7D85B004624B3 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		780EAEF32CA7D85B004624B3 /* SwiftVN */ = {
+			isa = PBXGroup;
+			children = (
+				780EAEEB2CA7D85B004624B3 /* Core */,
+				780EAEED2CA7D85B004624B3 /* Preview Content */,
+				780EAEEE2CA7D85B004624B3 /* Assets.xcassets */,
+				780EAEEF2CA7D85B004624B3 /* ContentView.swift */,
+				780EAEF02CA7D85B004624B3 /* Item.swift */,
+				780EAEF12CA7D85B004624B3 /* sample.ogg */,
+				780EAEF22CA7D85B004624B3 /* SwiftVNApp.swift */,
+				7824DE2B2CA80EF7003383A7 /* s01.scr */,
+			);
+			path = SwiftVN;
+			sourceTree = "<group>";
+		};
+		780EAEFC2CA7D863004624B3 /* SwiftVNTests */ = {
+			isa = PBXGroup;
+			children = (
+				780EAEFB2CA7D863004624B3 /* SwiftVNTests.swift */,
+			);
+			path = SwiftVNTests;
+			sourceTree = "<group>";
+		};
+		780EAF002CA7D866004624B3 /* SwiftVNUITests */ = {
+			isa = PBXGroup;
+			children = (
+				780EAEFE2CA7D866004624B3 /* SwiftVNUITests.swift */,
+				780EAEFF2CA7D866004624B3 /* SwiftVNUITestsLaunchTests.swift */,
+			);
+			path = SwiftVNUITests;
+			sourceTree = "<group>";
+		};
+		781A29A72CA7DCC000234AF6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				781A29B82CA7F66900234AF6 /* VLCKit.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -102,13 +189,11 @@
 				780EAE3B2CA76481004624B3 /* Sources */,
 				780EAE3C2CA76481004624B3 /* Frameworks */,
 				780EAE3D2CA76481004624B3 /* Resources */,
+				781A29BB2CA7F66900234AF6 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				780EAE412CA76481004624B3 /* SwiftVN */,
 			);
 			name = SwiftVN;
 			packageProductDependencies = (
@@ -130,9 +215,6 @@
 			dependencies = (
 				780EAE532CA76483004624B3 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				780EAE542CA76483004624B3 /* SwiftVNTests */,
-			);
 			name = SwiftVNTests;
 			packageProductDependencies = (
 			);
@@ -153,9 +235,6 @@
 			dependencies = (
 				780EAE5D2CA76483004624B3 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				780EAE5E2CA76483004624B3 /* SwiftVNUITests */,
-			);
 			name = SwiftVNUITests;
 			packageProductDependencies = (
 			);
@@ -175,6 +254,7 @@
 				TargetAttributes = {
 					780EAE3E2CA76481004624B3 = {
 						CreatedOnToolsVersion = 16.0;
+						LastSwiftMigration = 1600;
 					};
 					780EAE502CA76483004624B3 = {
 						CreatedOnToolsVersion = 16.0;
@@ -195,6 +275,8 @@
 			);
 			mainGroup = 780EAE362CA76481004624B3;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 780EAE402CA76481004624B3 /* Products */;
 			projectDirPath = "";
@@ -212,6 +294,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				780EAEF42CA7D85B004624B3 /* Preview Assets.xcassets in Resources */,
+				7824DE2C2CA80EF7003383A7 /* s01.scr in Resources */,
+				780EAEF52CA7D85B004624B3 /* Assets.xcassets in Resources */,
+				780EAEF62CA7D85B004624B3 /* sample.ogg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +322,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				780EAEF72CA7D85B004624B3 /* AudioManager.swift in Sources */,
+				780EAEF82CA7D85B004624B3 /* ContentView.swift in Sources */,
+				780EAEF92CA7D85B004624B3 /* Item.swift in Sources */,
+				7824DE2A2CA7FE9A003383A7 /* ScriptManager.swift in Sources */,
+				780EAEFA2CA7D85B004624B3 /* SwiftVNApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,6 +334,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				780EAEFD2CA7D863004624B3 /* SwiftVNTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -250,6 +342,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				780EAF012CA7D866004624B3 /* SwiftVNUITests.swift in Sources */,
+				780EAF022CA7D866004624B3 /* SwiftVNUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,6 +487,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SwiftVN/Preview Content\"";
@@ -402,16 +497,18 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kru.SwiftVN;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftVN/Core/SwiftVN-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -422,6 +519,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SwiftVN/Preview Content\"";
@@ -431,16 +529,17 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kru.SwiftVN;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftVN/Core/SwiftVN-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
