@@ -5,10 +5,11 @@
 //  Created by Kru on 28/09/24.
 //
 
-import Foundation
+import Logging
 
 class AudioManager: Loadable {
     private var archiveManager: ArchiveManager?
+    static var hasLoaded = false // TODO: UNUSED
     
     private let sound = VLCMediaPlayer()
     private let music = VLCMediaPlayer()
@@ -18,6 +19,8 @@ class AudioManager: Loadable {
     
     private var soundVolume: Int32 = 100
     private var musicVolume: Int32 = 100
+    
+    private let logger = LoggerFactory.shared
     
     private let fileType: [String: String] = [
         "audio/x-aiff": "aiff",
@@ -41,73 +44,58 @@ class AudioManager: Loadable {
     }
     
     func loadHandler() {
-        print("Loading sound...")
+        logger.info("Opening sounds ZIP...")
         archiveManager = ArchiveManager(zipFileName: "sound.zip")
-        print("archiveManager: \(String(describing: archiveManager))")
     }
  
     func clearMusic() {
         music.stop()
     }
     
-//    func clearSound() {
-//        sound.stop()
-//    }
-//    
-//    func loadSound(path: String) {
-//        guard let url = Bundle.main.url(forResource: path, withExtension: nil) else {
-//            print("Sound file not found")
-//            return
-//        }
-//        
-//        sound.media = VLCMedia(url: url)
-//        
-//        if (sound.media == nil) {
-//            print("Error loading audio source for sound file path \(path)")
-//            return
-//        }
-//    }
-//    
-//    func loadSound(data: Data) {
-//        sound.media = VLCMedia(stream: InputStream(data: data))
-//        
-//        if (sound.media == nil) {
-//            print("Error loading audio source for sound data")
-//            return
-//        }
-//    }
-//    
-//    func playSound() {
-//        if (sound.isPlaying) {
-//            clearSound()
-//        }
-//        
-//        sound.play()
-//        sound.audio?.volume = soundVolume
-//    }
+    func clearSound() {
+        sound.stop()
+    }
     
+    // TODO: Account for second numeric argument to opcode `sound`
+    func loadSound(soundPath: String) {
+        let data = archiveManager?.extractFile(named: "sound/\(soundPath)")
+        if data == nil {
+            print("Error loading music file")
+            return
+        }
+        
+        musicStream = InputStream(data: data!)
+        if musicStream == nil {
+            print("Error creating music stream")
+            return
+        }
+        
+        musicStream?.open()
+        music.media = VLCMedia(stream: musicStream!)
+    }
+
     func loadMusic(path: String) {
         var soundsPath = SwiftVN.baseDirectory.appendingPathComponent("sound")
         
         // Load the audio source
-        let soundUrl = soundsPath.appendingPathComponent(path)
+        let songUrl = soundsPath.appendingPathComponent(path)
         
         let fm = FileManager.default
-        if !fm.fileExists(atPath: soundUrl.path, isDirectory: nil) {
+        if !fm.fileExists(atPath: songUrl.path, isDirectory: nil) {
             print("File does not exist")
             return
         }
 
-        music.media = VLCMedia(url: soundUrl)
+        music.media = VLCMedia(url: songUrl)
         
         if (music.media == nil) {
-            print("Error loading audio source for music file path \(soundUrl.path)")
+            print("Error loading audio source for music file path \(songUrl.path)")
             return
         }
     }
     
-    func loadMusic(title: String) {
-        let data = archiveManager?.extractFile(named: "sound/music/\(title)")
+    func loadMusic(songPath: String) {
+        let data = archiveManager?.extractFile(named: "sound/\(songPath)")
         if data == nil {
             print("Error loading music file")
             return

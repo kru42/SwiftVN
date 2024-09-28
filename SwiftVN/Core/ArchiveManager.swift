@@ -36,8 +36,6 @@ class ArchiveManager {
             return nil
         }
         
-        // TODO: handle entry not found
-        
         var fileData = Data()
         
         do {

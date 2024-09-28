@@ -7,8 +7,10 @@
 
 import Foundation
 
+// Notification definitions
 extension Notification.Name {
     static let loadEvent = Notification.Name("loadEvent")
+    static let assetsLoaded = Notification.Name("assetsLoaded")
 }
 
 class SwiftVN {
@@ -38,7 +40,9 @@ class SwiftVN {
         }
     }
     
-    func emitLoadEvent() {
+    func prepareAssets() {
+        NotificationCenter.default.addObserver(ImageViewModel.shared, selector: #selector(ImageViewModel.handleLoadEvent), name: .loadEvent, object: nil)
+        NotificationCenter.default.addObserver(ImageViewModel.shared, selector: #selector(handleAssetsLoaded), name: .assetsLoaded, object: nil)
         NotificationCenter.default.post(name: .loadEvent, object: nil)
     }
 }
