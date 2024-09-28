@@ -54,13 +54,13 @@ class ScriptManager {
     func find(fileName: String) -> String? {
         var files: [String]?
         
-        guard let url = Bundle.main.url(forResource: baseDir, withExtension: nil) else {
+        guard let directoryUrl = Bundle.main.resourceURL?.appendingPathComponent(baseDir) else {
             print("Could not find script base directory")
             return nil
         }
         
         do {
-            files = try FileManager.default.contentsOfDirectory(atPath: url.path)
+            files = try FileManager.default.contentsOfDirectory(atPath: directoryUrl.path)
         } catch {
             print("Could not find script file \(fileName): \(error)")
             return nil
