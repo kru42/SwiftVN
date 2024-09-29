@@ -1,5 +1,5 @@
 //
-//  ScriptManager.swift
+//  Scriptswift
 //  SwiftVN
 //
 //  Created by Kru on 28/09/24.

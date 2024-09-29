@@ -34,7 +34,7 @@ struct ContentView: View {
                         logger.info("SpriteView displayed.")
                     }
                     .onTapGesture {
-                        sceneLoader.getScene().setTextWithAnimation("ハハ、勘煕ﾋヤッテクレヨ津久葉。コイツ今ｴﾋ?ｱ角咨まッテンダ。ナンｶｵノ前、コｭナッテ始メテすけーﾑﾜﾕｱ性ﾀ縷ンダカラサ")
+                        sceneLoader.getScene().handleTap()
                     }
             }
             
@@ -75,11 +75,11 @@ struct ContentView: View {
                 scene.setForegroundImage(fileName: "yoh05.png", x: 10, y: 0)
                 
                 audioManager.loadMusic(songPath: "music/s02.mp3")
-                audioManager.playMusic()
+                // audioManager.playMusic()
                 
                 logger.info("Drawing some text...")
                 
-                scene.setTextWithAnimation("SwiftVN 0.1 loaded")
+                //logger.info("SwiftVN 0.1 loaded")
             }
         }
     }

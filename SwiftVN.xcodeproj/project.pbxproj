@@ -24,7 +24,7 @@
 		788FBCEF2CA92DCD00B976A9 /* TextNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788FBCEE2CA92DCA00B976A9 /* TextNode.swift */; };
 		78918ACB2CA8C28900632961 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78918AC72CA8C28900632961 /* AudioManager.swift */; };
 		78918ACC2CA8C28900632961 /* SceneLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78918AC82CA8C28900632961 /* SceneLoader.swift */; };
-		78918ACD2CA8C28900632961 /* ScriptManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78918AC92CA8C28900632961 /* ScriptManager.swift */; };
+		78918ACD2CA8C28900632961 /* Script.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78918AC92CA8C28900632961 /* Script.swift */; };
 		78918ACF2CA8C29D00632961 /* VNScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78918ACE2CA8C29200632961 /* VNScene.swift */; };
 		78F0CE5B2CA843FD004BBDB6 /* Loadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F0CE5A2CA843FB004BBDB6 /* Loadable.swift */; };
 /* End PBXBuildFile section */
@@ -77,11 +77,12 @@
 		7824DE3B2CA819E0003383A7 /* SwiftVN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftVN.swift; sourceTree = "<group>"; };
 		787942252CA99B4200C50CC1 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
 		787942262CA99B4700C50CC1 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		787942272CA9A3FA00C50CC1 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		788EC63A2CA848EF006A3562 /* ArchiveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveManager.swift; sourceTree = "<group>"; };
 		788FBCEE2CA92DCA00B976A9 /* TextNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNode.swift; sourceTree = "<group>"; };
 		78918AC72CA8C28900632961 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		78918AC82CA8C28900632961 /* SceneLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneLoader.swift; sourceTree = "<group>"; };
-		78918AC92CA8C28900632961 /* ScriptManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptManager.swift; sourceTree = "<group>"; };
+		78918AC92CA8C28900632961 /* Script.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Script.swift; sourceTree = "<group>"; };
 		78918ACE2CA8C29200632961 /* VNScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VNScene.swift; sourceTree = "<group>"; };
 		78F0CE5A2CA843FB004BBDB6 /* Loadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loadable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -119,11 +120,12 @@
 			children = (
 				781A29A72CA7DCC000234AF6 /* Frameworks */,
 				780EAE402CA76481004624B3 /* Products */,
-				787942262CA99B4700C50CC1 /* README.md */,
 				780EAEF32CA7D85B004624B3 /* SwiftVN */,
 				780EAEFC2CA7D863004624B3 /* SwiftVNTests */,
 				780EAF002CA7D866004624B3 /* SwiftVNUITests */,
+				787942262CA99B4700C50CC1 /* README.md */,
 				787942252CA99B4200C50CC1 /* TODO.md */,
+				787942272CA9A3FA00C50CC1 /* LICENSE */,
 			);
 			sourceTree = "<group>";
 		};
@@ -188,10 +190,10 @@
 		78918ACA2CA8C28900632961 /* VNDS */ = {
 			isa = PBXGroup;
 			children = (
-				788FBCEE2CA92DCA00B976A9 /* TextNode.swift */,
 				78918AC72CA8C28900632961 /* AudioManager.swift */,
 				78918AC82CA8C28900632961 /* SceneLoader.swift */,
-				78918AC92CA8C28900632961 /* ScriptManager.swift */,
+				78918AC92CA8C28900632961 /* Script.swift */,
+				788FBCEE2CA92DCA00B976A9 /* TextNode.swift */,
 				78918ACE2CA8C29200632961 /* VNScene.swift */,
 			);
 			path = VNDS;
@@ -361,7 +363,7 @@
 				781741612CA89C9400D0B3B9 /* LoggerFactory.swift in Sources */,
 				78918ACB2CA8C28900632961 /* AudioManager.swift in Sources */,
 				78918ACC2CA8C28900632961 /* SceneLoader.swift in Sources */,
-				78918ACD2CA8C28900632961 /* ScriptManager.swift in Sources */,
+				78918ACD2CA8C28900632961 /* Script.swift in Sources */,
 				7824DE3C2CA819E9003383A7 /* SwiftVN.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

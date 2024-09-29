@@ -8,8 +8,8 @@
 import SpriteKit
 
 class TextNode: SKNode {
-    private var fullLine: String = ""
-    private var textLine: String = ""
+    private var textString: String = ""
+    private var currentTextLine: String = ""
     private let maxLines: Int
     private let padding: CGFloat
     private let fontSize: CGFloat
@@ -17,7 +17,9 @@ class TextNode: SKNode {
     
     private var background: SKShapeNode?
     private var labelNodes: [SKLabelNode] = []
-    private var isAnimating: Bool = false
+    private var animationTimer: Timer?
+    var isAnimating: Bool = false
+    var isAnimationComplete: Bool = false
     
     init(fontSize: CGFloat = 16, maxLines: Int = 3, padding: CGFloat = 20) {
         self.fontSize = fontSize
@@ -42,50 +44,50 @@ class TextNode: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setTextWithAnimation(_ line: String, delay: TimeInterval = 0.05) -> Bool {
-        self.fullLine = line
+    func setTextWithAnimation(_ line: String, delay: TimeInterval = 0.05) {
+        stopAnimation()
         
-        // If currently animating, render all text instantly and return
-        if isAnimating {
-            drawTextInstantly(line)
-            return false // Indicates instant render
-        }
+        self.textString = line
+        self.currentTextLine = "" // Prepare for animation
+        self.isAnimating = true
+        self.isAnimationComplete = false
         
         let characters = Array(line)
-        
-        textLine = "" // Prepare for animation
-        self.isAnimating = true
-        
-        // Timer to manage the character display
         var currentCharacterIndex = 0
         
-        let timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: true) { timer in
+        // Timer to manage the character display
+        animationTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: true) { [weak self] timer in
+            guard let self = self else { timer.invalidate(); return }
+            
             // Append the next character to the line
             if currentCharacterIndex < characters.count {
-                self.textLine.append(characters[currentCharacterIndex])
+                self.currentTextLine.append(characters[currentCharacterIndex])
                 self.setNeedsDisplay()
                 currentCharacterIndex += 1
             } else {
-                timer.invalidate()
-                self.isAnimating = false
+                self.stopAnimation()
             }
         }
         
-        RunLoop.main.add(timer, forMode: .common)
-        return true // Indicates animation started
+        RunLoop.main.add(animationTimer!, forMode: .common)
+    }
+    
+    private func stopAnimation() {
+        animationTimer?.invalidate()
+        animationTimer = nil
+        isAnimating = false
+        isAnimationComplete = true
+    }
+    
+    func skipAnimation() {
+        stopAnimation()
+        currentTextLine = textString
+        setNeedsDisplay()
     }
     
     func setNeedsDisplay() {
         removeAllChildren()
-        drawText()
-    }
-    
-    private func drawTextInstantly(_ line: String) {
-        // Render all text instantly
-        textLine = line
-        setNeedsDisplay()
-        
-        isAnimating = false
+        self.drawText()
     }
     
     private func drawText() {
@@ -96,7 +98,7 @@ class TextNode: SKNode {
         // NOTE: Text lines that may contain Japanese characters
         var currentLine = ""
         
-        for character in Array(textLine) {
+        for character in Array(currentTextLine) {
             let testLine = currentLine.isEmpty ? String(character) : "\(currentLine)\(character)"
             let testLineSize = (testLine as NSString).size(withAttributes: [NSAttributedString.Key.font: textFont])
             
@@ -120,6 +122,7 @@ class TextNode: SKNode {
         // Draw the wrapped lines
         let totalHeight = CGFloat(wrappedLines.count) * lineHeight + padding
         
+        // TODO: Just draw the background once
         let background = SKShapeNode(rect: CGRect(x: 0, y: 0, width: width, height: totalHeight))
         background.fillColor = UIColor(red: 0.18, green: 0.204, blue: 0.251, alpha: 0.8)
         background.strokeColor = .clear

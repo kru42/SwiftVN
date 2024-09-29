@@ -11,7 +11,7 @@ class VNScene: SKScene {
     var backgroundNode: SKSpriteNode?
     var imageNodes: [SKSpriteNode] = []
     
-    private var textNode: TextNode?
+    private var textNode: TextNode!
     
     var backgroundArchive: ArchiveManager?
     var foregroundArchive: ArchiveManager?
@@ -26,17 +26,31 @@ class VNScene: SKScene {
         addChild(uiNode)
         
         textNode = TextNode(fontSize: 16, maxLines: 10, padding: 10)
-        if let textNode = textNode {
-            uiNode.addChild(textNode)
-        }
+        uiNode.addChild(textNode)
+        
+        textNode.position = CGPoint(x: 20, y: 20)
         
         NotificationCenter.default.post(name: .sceneReady, object: nil)
+        
+        // ===== DEBUG =====
+        textNode?.setTextWithAnimation("placeholder")
     }
     
-    func setTextWithAnimation(_ line: String) {
-        // TODO: if the text is currently rendering, just render it all instantly instead of adding new text
-        //  and return something
-        textNode?.setTextWithAnimation(line)
+    private func showNextLine() {
+        let lines = ["loliejowifio ewjofij ewoifje woifjewoi jfewoi fjewo", "fejnwoijewoi fiewoj ioewfj ioewfj ewoij ewoi", "ハハ、勘煕ﾋヤッテクレヨ津久葉。コイツ今ｴﾋ?ｱ角咨まッテンダ。ナンｶｵノ前、コｭナッテ始メテすけーﾑﾜﾕｱ性ﾀ縷ンダカラサ"]
+        
+        textNode?.setTextWithAnimation(lines.randomElement()!)
+    }
+    
+    // TODO: Refactor, move to an input manager class that processes a .scr (script) file
+    func handleTap() {
+        if let textNode = self.textNode {
+            if textNode.isAnimating {
+                textNode.skipAnimation()
+            } else if textNode.isAnimationComplete {
+                showNextLine()
+            }
+        }
     }
 
     // Load background image
