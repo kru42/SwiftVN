@@ -41,8 +41,6 @@ class SwiftVN {
     }
     
     func prepareAssets() {
-        NotificationCenter.default.addObserver(ImageViewModel.shared, selector: #selector(ImageViewModel.handleLoadEvent), name: .loadEvent, object: nil)
-        NotificationCenter.default.addObserver(ImageViewModel.shared, selector: #selector(handleAssetsLoaded), name: .assetsLoaded, object: nil)
         NotificationCenter.default.post(name: .loadEvent, object: nil)
     }
 }

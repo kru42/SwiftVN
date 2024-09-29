@@ -6,47 +6,42 @@
 //
 
 import SwiftUI
+import SpriteKit
+import Logging
 
 // SwiftUI View
 struct ContentView: View {
-    @StateObject private var viewModel = ImageViewModel.shared
-    
     private let vn: SwiftVN = SwiftVN()
+    private let audioManager: AudioManager = AudioManager()
+    private let spriteManager = SpriteManager()
     
+    private let logger = LoggerFactory.shared
+
     init() {
         vn.prepareAssets()
     }
     
     var body: some View {
         ZStack {
-            if viewModel.isLoading {
+            if spriteManager.isLoading {
                 ProgressView("Loading...")
                     .progressViewStyle(CircularProgressViewStyle())
                     .scaleEffect(1.5, anchor: .center)
             } else {
-                // Draw the background with alpha
-                if let bgImage = viewModel.backgroundImage {
-                    bgImage
-                        .resizable()
-                        .scaledToFill()
-                        .opacity(viewModel.alpha)
-                }
-                
-                // Draw the foreground images
-                ForEach(viewModel.images) { imageModel in
-                    imageModel.image
-                        .resizable()
-                        .position(x: imageModel.x, y: imageModel.y)
-                }
-            }
-        }
-        .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                if ImageViewModel.hasLoaded {
-                    // Load background and images
-                    viewModel.loadBackground(path: "ba05no1.jpg", withAnimationFrames: 60)
-                    viewModel.setForegroundImage(fileName: "kouji12.png", x: 100, y: 100)
-                }
+                CustomSpriteView(spriteManager: spriteManager) // Use your custom view
+                    .ignoresSafeArea() // Make it cover the full screen
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            if SpriteManager.hasLoaded {
+                                logger.info("Loading background and images...")
+                                spriteManager.loadBackground(path: "ba05no1.jpg", withAnimationFrames: 60)
+                                spriteManager.setForegroundImage(fileName: "fumi02.png", x: 60, y: 0)
+                            }
+                        }
+                        
+                        audioManager.loadMusic(songPath: "music/s02.mp3")
+                        audioManager.playMusic()
+                    }
             }
         }
     }

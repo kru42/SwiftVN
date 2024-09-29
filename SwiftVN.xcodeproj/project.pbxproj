@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		780EAEF42CA7D85B004624B3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 780EAEEC2CA7D85B004624B3 /* Preview Assets.xcassets */; };
 		780EAEF52CA7D85B004624B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 780EAEEE2CA7D85B004624B3 /* Assets.xcassets */; };
-		780EAEF72CA7D85B004624B3 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780EAEEA2CA7D85B004624B3 /* AudioManager.swift */; };
 		780EAEF82CA7D85B004624B3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780EAEEF2CA7D85B004624B3 /* ContentView.swift */; };
 		780EAEFA2CA7D85B004624B3 /* SwiftVNApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780EAEF22CA7D85B004624B3 /* SwiftVNApp.swift */; };
 		780EAEFD2CA7D863004624B3 /* SwiftVNTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780EAEFB2CA7D863004624B3 /* SwiftVNTests.swift */; };
@@ -19,11 +18,14 @@
 		781741612CA89C9400D0B3B9 /* LoggerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781741602CA89C8E00D0B3B9 /* LoggerFactory.swift */; };
 		781A29B92CA7F66900234AF6 /* VLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 781A29B82CA7F66900234AF6 /* VLCKit.xcframework */; };
 		781A29BA2CA7F66900234AF6 /* VLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 781A29B82CA7F66900234AF6 /* VLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		7824DE2A2CA7FE9A003383A7 /* ScriptManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7824DE292CA7FE98003383A7 /* ScriptManager.swift */; };
 		7824DE3C2CA819E9003383A7 /* SwiftVN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7824DE3B2CA819E0003383A7 /* SwiftVN.swift */; };
 		7859C39C2CA849C200051A60 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 7859C39B2CA849C200051A60 /* ZIPFoundation */; };
-		78798DE02CA8A12F001FB3C5 /* ImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78798DDF2CA8A12C001FB3C5 /* ImageViewModel.swift */; };
 		788EC63B2CA848F1006A3562 /* ArchiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788EC63A2CA848EF006A3562 /* ArchiveManager.swift */; };
+		78918ACB2CA8C28900632961 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78918AC72CA8C28900632961 /* AudioManager.swift */; };
+		78918ACC2CA8C28900632961 /* SceneLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78918AC82CA8C28900632961 /* SceneLoader.swift */; };
+		78918ACD2CA8C28900632961 /* ScriptManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78918AC92CA8C28900632961 /* ScriptManager.swift */; };
+		78918ACF2CA8C29D00632961 /* VNScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78918ACE2CA8C29200632961 /* VNScene.swift */; };
+		78918AD12CA8CD1300632961 /* VNSpriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78918AD02CA8CD0D00632961 /* VNSpriteView.swift */; };
 		78F0CE5B2CA843FD004BBDB6 /* Loadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F0CE5A2CA843FB004BBDB6 /* Loadable.swift */; };
 /* End PBXBuildFile section */
 
@@ -62,7 +64,6 @@
 		780EAE3F2CA76481004624B3 /* SwiftVN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftVN.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		780EAE512CA76483004624B3 /* SwiftVNTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftVNTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		780EAE5B2CA76483004624B3 /* SwiftVNUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftVNUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		780EAEEA2CA7D85B004624B3 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		780EAEEC2CA7D85B004624B3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		780EAEEE2CA7D85B004624B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		780EAEEF2CA7D85B004624B3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -73,10 +74,13 @@
 		781741602CA89C8E00D0B3B9 /* LoggerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerFactory.swift; sourceTree = "<group>"; };
 		781A29B02CA7DE0300234AF6 /* SwiftVN-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwiftVN-Bridging-Header.h"; sourceTree = "<group>"; };
 		781A29B82CA7F66900234AF6 /* VLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = VLCKit.xcframework; path = Carthage/Build/VLCKit.xcframework; sourceTree = "<group>"; };
-		7824DE292CA7FE98003383A7 /* ScriptManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptManager.swift; sourceTree = "<group>"; };
 		7824DE3B2CA819E0003383A7 /* SwiftVN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftVN.swift; sourceTree = "<group>"; };
-		78798DDF2CA8A12C001FB3C5 /* ImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewModel.swift; sourceTree = "<group>"; };
 		788EC63A2CA848EF006A3562 /* ArchiveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveManager.swift; sourceTree = "<group>"; };
+		78918AC72CA8C28900632961 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
+		78918AC82CA8C28900632961 /* SceneLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneLoader.swift; sourceTree = "<group>"; };
+		78918AC92CA8C28900632961 /* ScriptManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptManager.swift; sourceTree = "<group>"; };
+		78918ACE2CA8C29200632961 /* VNScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VNScene.swift; sourceTree = "<group>"; };
+		78918AD02CA8CD0D00632961 /* VNSpriteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VNSpriteView.swift; sourceTree = "<group>"; };
 		78F0CE5A2CA843FB004BBDB6 /* Loadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loadable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -111,11 +115,11 @@
 		780EAE362CA76481004624B3 = {
 			isa = PBXGroup;
 			children = (
+				781A29A72CA7DCC000234AF6 /* Frameworks */,
+				780EAE402CA76481004624B3 /* Products */,
 				780EAEF32CA7D85B004624B3 /* SwiftVN */,
 				780EAEFC2CA7D863004624B3 /* SwiftVNTests */,
 				780EAF002CA7D866004624B3 /* SwiftVNUITests */,
-				781A29A72CA7DCC000234AF6 /* Frameworks */,
-				780EAE402CA76481004624B3 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -129,16 +133,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		780EAEEB2CA7D85B004624B3 /* VNDB */ = {
-			isa = PBXGroup;
-			children = (
-				7824DE292CA7FE98003383A7 /* ScriptManager.swift */,
-				780EAEEA2CA7D85B004624B3 /* AudioManager.swift */,
-				78798DDF2CA8A12C001FB3C5 /* ImageViewModel.swift */,
-			);
-			path = VNDB;
-			sourceTree = "<group>";
-		};
 		780EAEED2CA7D85B004624B3 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
@@ -150,14 +144,14 @@
 		780EAEF32CA7D85B004624B3 /* SwiftVN */ = {
 			isa = PBXGroup;
 			children = (
-				78F0CE592CA843F5004BBDB6 /* Core */,
-				780EAEEB2CA7D85B004624B3 /* VNDB */,
-				780EAEED2CA7D85B004624B3 /* Preview Content */,
 				780EAEEE2CA7D85B004624B3 /* Assets.xcassets */,
 				780EAEEF2CA7D85B004624B3 /* ContentView.swift */,
-				780EAEF22CA7D85B004624B3 /* SwiftVNApp.swift */,
-				781A29B02CA7DE0300234AF6 /* SwiftVN-Bridging-Header.h */,
+				78F0CE592CA843F5004BBDB6 /* Core */,
+				780EAEED2CA7D85B004624B3 /* Preview Content */,
 				7824DE3B2CA819E0003383A7 /* SwiftVN.swift */,
+				781A29B02CA7DE0300234AF6 /* SwiftVN-Bridging-Header.h */,
+				780EAEF22CA7D85B004624B3 /* SwiftVNApp.swift */,
+				78918ACA2CA8C28900632961 /* VNDS */,
 			);
 			path = SwiftVN;
 			sourceTree = "<group>";
@@ -187,12 +181,24 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		78918ACA2CA8C28900632961 /* VNDS */ = {
+			isa = PBXGroup;
+			children = (
+				78918AC72CA8C28900632961 /* AudioManager.swift */,
+				78918AC82CA8C28900632961 /* SceneLoader.swift */,
+				78918AC92CA8C28900632961 /* ScriptManager.swift */,
+				78918ACE2CA8C29200632961 /* VNScene.swift */,
+				78918AD02CA8CD0D00632961 /* VNSpriteView.swift */,
+			);
+			path = VNDS;
+			sourceTree = "<group>";
+		};
 		78F0CE592CA843F5004BBDB6 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				781741602CA89C8E00D0B3B9 /* LoggerFactory.swift */,
-				78F0CE5A2CA843FB004BBDB6 /* Loadable.swift */,
 				788EC63A2CA848EF006A3562 /* ArchiveManager.swift */,
+				78F0CE5A2CA843FB004BBDB6 /* Loadable.swift */,
+				781741602CA89C8E00D0B3B9 /* LoggerFactory.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -342,14 +348,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				780EAEF72CA7D85B004624B3 /* AudioManager.swift in Sources */,
 				78F0CE5B2CA843FD004BBDB6 /* Loadable.swift in Sources */,
+				78918AD12CA8CD1300632961 /* VNSpriteView.swift in Sources */,
 				788EC63B2CA848F1006A3562 /* ArchiveManager.swift in Sources */,
 				780EAEF82CA7D85B004624B3 /* ContentView.swift in Sources */,
-				7824DE2A2CA7FE9A003383A7 /* ScriptManager.swift in Sources */,
-				78798DE02CA8A12F001FB3C5 /* ImageViewModel.swift in Sources */,
 				780EAEFA2CA7D85B004624B3 /* SwiftVNApp.swift in Sources */,
+				78918ACF2CA8C29D00632961 /* VNScene.swift in Sources */,
 				781741612CA89C9400D0B3B9 /* LoggerFactory.swift in Sources */,
+				78918ACB2CA8C28900632961 /* AudioManager.swift in Sources */,
+				78918ACC2CA8C28900632961 /* SceneLoader.swift in Sources */,
+				78918ACD2CA8C28900632961 /* ScriptManager.swift in Sources */,
 				7824DE3C2CA819E9003383A7 /* SwiftVN.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

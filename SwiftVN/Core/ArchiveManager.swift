@@ -48,4 +48,13 @@ class ArchiveManager {
             return nil
         }
     }
+    
+    func extractImage(named fileName: String) -> UIImage? {
+          guard let data = extractFile(named: fileName) else {
+              return nil
+          }
+        
+        print(data.count)
+          return UIImage(data: data)
+      }
 }
