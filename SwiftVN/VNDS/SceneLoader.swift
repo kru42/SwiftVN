@@ -10,7 +10,7 @@ import Combine
 import SpriteKit
 
 // ViewModel to manage state and actions
-class SpriteManager: Loadable, ObservableObject {
+class SceneLoader: Loadable, ObservableObject {
     // Singleton instance
     static var hasLoaded = false {
         didSet {
@@ -22,28 +22,33 @@ class SpriteManager: Loadable, ObservableObject {
     @Published var isLoading: Bool = true
     
     // Foreground and background images archives
-    private static var foregroundArchive: ArchiveManager?
-    private static var backgroundArchive: ArchiveManager?
+    private var foregroundArchive: ArchiveManager?
+    private var backgroundArchive: ArchiveManager?
     
     var scene: VNScene?
     private let logger = LoggerFactory.shared
     
     init() {
-        NotificationCenter.default.addObserver(self, selector: #selector(SpriteManager.handleLoadEvent), name: .loadEvent, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(SpriteManager.handleAssetsLoaded), name: .assetsLoaded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleLoadEvent), name: .loadEvent, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleAssetsLoaded), name: .assetsLoaded, object: nil)
     }
     
     func setupScene(in view: SKView) {
         let scene = VNScene(size: view.bounds.size)
         scene.scaleMode = .aspectFill
-        scene.backgroundArchive = SpriteManager.backgroundArchive
-        scene.foregroundArchive = SpriteManager.foregroundArchive
-        view.presentScene(scene)
+        
+        scene.backgroundArchive = backgroundArchive
+        scene.foregroundArchive = foregroundArchive
+        
         self.scene = scene
     }
     
     func getScene() -> VNScene {
-        return scene!
+        if let scene = scene {
+            return scene
+        } else {
+            fatalError("Scene not set")
+        }
     }
     
     @objc func handleLoadEvent() {
@@ -56,18 +61,13 @@ class SpriteManager: Loadable, ObservableObject {
 
     func loadHandler() {
         logger.info("Opening images ZIP...")
-        SpriteManager.foregroundArchive = ArchiveManager(zipFileName: "foreground.zip")
-        SpriteManager.backgroundArchive = ArchiveManager(zipFileName: "background.zip")
-    }
-
-    // Load background image
-    func loadBackground(path: String, withAnimationFrames frames: Double?) {
-        scene?.loadBackgroundImage(named: path)
-    }
-    
-    // Set foreground image
-    func setForegroundImage(fileName: String, x: CGFloat, y: CGFloat) {
-        scene?.addImage(named: fileName, position: CGPoint(x: x, y: y))
+        foregroundArchive = ArchiveManager(zipFileName: "foreground.zip")
+        backgroundArchive = ArchiveManager(zipFileName: "background.zip")
+        
+        let skView = SKView(frame: UIScreen.main.bounds)
+        
+        logger.info("Initializing scene nodes and fonts...")
+        setupScene(in: skView)
     }
     
     func clearImages() {

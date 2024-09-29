@@ -11,40 +11,74 @@ class VNScene: SKScene {
     var backgroundNode: SKSpriteNode?
     var imageNodes: [SKSpriteNode] = []
     
+    private var textNode: TextNode?
+    
     var backgroundArchive: ArchiveManager?
     var foregroundArchive: ArchiveManager?
     
+    private let contentNode = SKNode()
+    private let uiNode = SKNode()
+    
     override func didMove(to view: SKView) {
-        backgroundColor = .white
+        backgroundColor = .gray
+        
+        addChild(contentNode)
+        addChild(uiNode)
+        
+        textNode = TextNode(fontSize: 16, maxLines: 10, padding: 10)
+        if let textNode = textNode {
+            print(String(describing: textNode))
+            uiNode.addChild(textNode)
+        }
+        
+        NotificationCenter.default.post(name: .sceneReady, object: nil)
+    }
+    
+    // Doesn't actually always render one single line, but a character script line which can include multiple
+    func renderTextLineWithAnimation(_ line: String) {
+        print(String(describing: textNode))
+        textNode?.addLineWithAnimation(line)
     }
 
-    func loadBackgroundImage(named name: String) {
-        let texture = SKTexture(imageNamed: name)
+    // Load background image
+    func loadBackground(path: String, withAnimationFrames frames: Double?) {
+        loadBackgroundImage(named: path)
+    }
+    
+    // Set foreground image
+    func setForegroundImage(fileName: String, x: CGFloat, y: CGFloat) {
+        addImage(named: fileName, position: CGPoint(x: x, y: y))
+    }
+
+    private func loadBackgroundImage(named name: String) {
+        guard let texture = loadTexture(from: name, isBackground: true) else { return }
         
         backgroundNode = SKSpriteNode(texture: texture)
         backgroundNode?.position = CGPoint(x: size.width / 2, y: size.height / 2)
         backgroundNode?.size = size
-        addChild(backgroundNode!)
+        contentNode.addChild(backgroundNode!)
     }
     
-    func addImage(named name: String, position: CGPoint) {
+    private func addImage(named name: String, position: CGPoint) {
         guard let texture = loadTexture(from: name) else { return }
         
         let spriteNode = SKSpriteNode(texture: texture)
         spriteNode.position = position
         imageNodes.append(spriteNode)
-        addChild(spriteNode)
+        contentNode.addChild(spriteNode)
     }
     
     func loadTexture(from fileName: String, isBackground: Bool = false) -> SKTexture? {
         let filePath = "\(isBackground ? "background" : "foreground")/\(fileName)"
         
-        var image: UIImage?
+        var archive: ArchiveManager?
         if isBackground {
-            image = backgroundArchive?.extractImage(named: filePath)
+            archive = backgroundArchive
         } else {
-            image = foregroundArchive?.extractImage(named: filePath)
+            archive = foregroundArchive
         }
+        
+        let image = archive?.extractImage(named: filePath)
         
         return SKTexture(image: image!)
     }

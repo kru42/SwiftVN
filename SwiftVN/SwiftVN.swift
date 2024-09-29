@@ -11,6 +11,7 @@ import Foundation
 extension Notification.Name {
     static let loadEvent = Notification.Name("loadEvent")
     static let assetsLoaded = Notification.Name("assetsLoaded")
+    static let sceneReady = Notification.Name("sceneReady")
 }
 
 class SwiftVN {

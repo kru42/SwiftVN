@@ -16,7 +16,6 @@ class ArchiveManager {
             print("Error: ZIP file not found.")
             return
         }
-        print(zipFileURL.path)
         
         do {
             archive = try Archive.init(url: zipFileURL, accessMode: .read, pathEncoding: String.Encoding.utf8)
@@ -50,11 +49,10 @@ class ArchiveManager {
     }
     
     func extractImage(named fileName: String) -> UIImage? {
-          guard let data = extractFile(named: fileName) else {
-              return nil
-          }
+        guard let data = extractFile(named: fileName) else {
+            return nil
+        }
         
-        print(data.count)
-          return UIImage(data: data)
-      }
+        return UIImage(data: data)
+    }
 }

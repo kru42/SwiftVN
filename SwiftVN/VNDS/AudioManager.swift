@@ -7,9 +7,9 @@
 
 import Logging
 
-class AudioManager: Loadable {
+class AudioManager: Loadable, ObservableObject {
+    static var hasLoaded = false
     private var archiveManager: ArchiveManager?
-    static var hasLoaded = false // TODO: UNUSED
     
     private let sound = VLCMediaPlayer()
     private let music = VLCMediaPlayer()
@@ -40,7 +40,7 @@ class AudioManager: Loadable {
     }
     
     @objc func handleLoadEvent(_ notification: Notification) {
-        loadHandler()
+        tryLoad()
     }
     
     func loadHandler() {
