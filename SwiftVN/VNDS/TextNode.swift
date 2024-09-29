@@ -8,11 +8,16 @@
 import SpriteKit
 
 class TextNode: SKNode {
-    private var textLines: [String] = []
+    private var fullLine: String = ""
+    private var textLine: String = ""
     private let maxLines: Int
     private let padding: CGFloat
     private let fontSize: CGFloat
     private var textFont: UIFont
+    
+    private var background: SKShapeNode?
+    private var labelNodes: [SKLabelNode] = []
+    private var isAnimating: Bool = false
     
     init(fontSize: CGFloat = 16, maxLines: Int = 3, padding: CGFloat = 20) {
         self.fontSize = fontSize
@@ -37,24 +42,37 @@ class TextNode: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func addLineWithAnimation(_ line: String, delay: TimeInterval = 0.05) {
-        textLines.append("") // Add an empty line first to prepare for animation
-        if textLines.count > maxLines {
-            textLines.removeFirst()
+    func setTextWithAnimation(_ line: String, delay: TimeInterval = 0.05) -> Bool {
+        self.fullLine = line
+        
+        // If currently animating, render all text instantly and return
+        if isAnimating {
+            drawTextInstantly(line)
+            return false // Indicates instant render
         }
         
-        setNeedsDisplay() // Draw the initial state
-        
-        let lineIndex = textLines.count - 1
         let characters = Array(line)
         
-        // Display each character one by one
-        for (index, character) in characters.enumerated() {
-            DispatchQueue.main.asyncAfter(deadline: .now() + delay * Double(index)) {
-                self.textLines[lineIndex].append(character)
+        textLine = "" // Prepare for animation
+        self.isAnimating = true
+        
+        // Timer to manage the character display
+        var currentCharacterIndex = 0
+        
+        let timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: true) { timer in
+            // Append the next character to the line
+            if currentCharacterIndex < characters.count {
+                self.textLine.append(characters[currentCharacterIndex])
                 self.setNeedsDisplay()
+                currentCharacterIndex += 1
+            } else {
+                timer.invalidate()
+                self.isAnimating = false
             }
         }
+        
+        RunLoop.main.add(timer, forMode: .common)
+        return true // Indicates animation started
     }
     
     func setNeedsDisplay() {
@@ -62,37 +80,41 @@ class TextNode: SKNode {
         drawText()
     }
     
-    private func drawText() {
-        guard !textLines.isEmpty else { return }
+    private func drawTextInstantly(_ line: String) {
+        // Render all text instantly
+        textLine = line
+        setNeedsDisplay()
         
+        isAnimating = false
+    }
+    
+    private func drawText() {
         let lineHeight = textFont.lineHeight + padding
         let width = UIScreen.main.bounds.width - 2 * padding
         var wrappedLines: [String] = []
         
         // NOTE: Text lines that may contain Japanese characters
-        for line in textLines {
-            var currentLine = ""
+        var currentLine = ""
+        
+        for character in Array(textLine) {
+            let testLine = currentLine.isEmpty ? String(character) : "\(currentLine)\(character)"
+            let testLineSize = (testLine as NSString).size(withAttributes: [NSAttributedString.Key.font: textFont])
             
-            for character in line {
-                let testLine = currentLine.isEmpty ? String(character) : "\(currentLine)\(character)"
-                let testLineSize = (testLine as NSString).size(withAttributes: [NSAttributedString.Key.font: textFont])
-
-                // If adding the character following the current character exceeds the width, start a new line
-                if testLineSize.width + fontSize > width {
-                    wrappedLines.append(currentLine)
-                    currentLine = String(character) // Start a new line with the current character
-                } else {
-                    currentLine = testLine // Continue building the current line
-                }
-            }
-
-            // Add any remaining text in currentLine to wrappedLines
-            if !currentLine.isEmpty {
+            // If adding the character following the current character exceeds the width, start a new line
+            if testLineSize.width + fontSize > width {
                 wrappedLines.append(currentLine)
+                currentLine = String(character) // Start a new line with the current character
+            } else {
+                currentLine = testLine // Continue building the current line
             }
         }
         
-        // Clear existing children before drawing
+        // Add any remaining text in currentLine to wrappedLines
+        if !currentLine.isEmpty {
+            wrappedLines.append(currentLine)
+        }
+        
+        // Clear existing children before drawing if needed
         removeAllChildren()
         
         // Draw the wrapped lines

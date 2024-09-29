@@ -15,10 +15,9 @@ struct ContentView: View {
     
     @StateObject private var audioManager = AudioManager()
     @StateObject private var sceneLoader = SceneLoader()
+    @StateObject private var fpsCounter = FPSCounter()
     
     @State private var isSceneReady: Bool = false
-    @State private var fps: Double = 0.0
-    @State private var lastUpdateTime: Date = Date()
     
     private let logger = LoggerFactory.shared
     
@@ -27,14 +26,15 @@ struct ContentView: View {
             if sceneLoader.isLoading {
                 ProgressView("Loading...")
                     .progressViewStyle(CircularProgressViewStyle())
-                // .scaleEffect(1.5, anchor: .center)
+                    .scaleEffect(1.5, anchor: .center)
             } else if isSceneReady {
                 SpriteView(scene: sceneLoader.getScene())
                     .ignoresSafeArea()
                     .onAppear {
-                        logger.info("SpriteView rendered")
-                        
-                        startFPSTimer()
+                        logger.info("SpriteView displayed.")
+                    }
+                    .onTapGesture {
+                        sceneLoader.getScene().setTextWithAnimation("ハハ、勘煕ﾋヤッテクレヨ津久葉。コイツ今ｴﾋ?ｱ角咨まッテンダ。ナンｶｵノ前、コｭナッテ始メテすけーﾑﾜﾕｱ性ﾀ縷ンダカラサ")
                     }
             }
             
@@ -44,15 +44,23 @@ struct ContentView: View {
                     Text("SwiftVN 0.1")
                         .font(.headline)
                         .foregroundStyle(.white)
-                        .padding()
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
                     Spacer()
-                    Text("FPS: \(Int(fps))")
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                        .padding()
+                    TimelineView(.animation) { timeline in
+                        let _ = DispatchQueue.main.async {
+                            fpsCounter.update(date: timeline.date)
+                        }
+                        
+                        Text("FPS: \(Int(fpsCounter.fps))")
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                    }
                 }
-                .background(Color.black.opacity(0.5)) // Semi-transparent black background
-                .padding() // Optional padding around the HStack
+                .background(Color.black.opacity(0.5))
+                
                 Spacer() // This spacer pushes the HStack to the top
             }
         }
@@ -64,14 +72,14 @@ struct ContentView: View {
                 logger.info("Loading test background and images...")
                 
                 scene.loadBackground(path: "ba05no1.jpg", withAnimationFrames: 60)
-                scene.setForegroundImage(fileName: "fumi02.png", x: 60, y: 0)
+                scene.setForegroundImage(fileName: "yoh05.png", x: 10, y: 0)
                 
                 audioManager.loadMusic(songPath: "music/s02.mp3")
                 audioManager.playMusic()
                 
                 logger.info("Drawing some text...")
                 
-                scene.renderTextLineWithAnimation("ハハ、勘煕ﾋヤッテクレヨ津久葉。コイツ今ｴﾋ?ｱ角咨まッテンダ。ナンｶｵノ前、コｭナッテ始メテすけーﾑﾜﾕｱ性ﾀ縷ンダカラサ")
+                scene.setTextWithAnimation("SwiftVN 0.1 loaded")
             }
         }
     }
@@ -85,16 +93,20 @@ struct ContentView: View {
             }
         }
     }
+}
+
+class FPSCounter: ObservableObject {
+    @Published var fps: Double = 0
+    private var lastUpdateTime = Date()
+    private var frameCount = 0
     
-    private func startFPSTimer() {
-        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            let currentTime = Date()
-            let elapsed = currentTime.timeIntervalSince(lastUpdateTime)
-            if elapsed > 0 {
-                fps = 1.0 / elapsed
-            }
-            
-            lastUpdateTime = currentTime
+    func update(date: Date) {
+        frameCount += 1
+        let elapsed = date.timeIntervalSince(lastUpdateTime)
+        if elapsed >= 1 {
+            fps = Double(frameCount) / elapsed
+            frameCount = 0
+            lastUpdateTime = date
         }
     }
 }

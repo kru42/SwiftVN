@@ -27,17 +27,16 @@ class VNScene: SKScene {
         
         textNode = TextNode(fontSize: 16, maxLines: 10, padding: 10)
         if let textNode = textNode {
-            print(String(describing: textNode))
             uiNode.addChild(textNode)
         }
         
         NotificationCenter.default.post(name: .sceneReady, object: nil)
     }
     
-    // Doesn't actually always render one single line, but a character script line which can include multiple
-    func renderTextLineWithAnimation(_ line: String) {
-        print(String(describing: textNode))
-        textNode?.addLineWithAnimation(line)
+    func setTextWithAnimation(_ line: String) {
+        // TODO: if the text is currently rendering, just render it all instantly instead of adding new text
+        //  and return something
+        textNode?.setTextWithAnimation(line)
     }
 
     // Load background image
@@ -62,8 +61,33 @@ class VNScene: SKScene {
     private func addImage(named name: String, position: CGPoint) {
         guard let texture = loadTexture(from: name) else { return }
         
+        // Get screen size
+        let screenWidth = UIScreen.main.bounds.width
+        let screenHeight = UIScreen.main.bounds.height
+        
+        // Original image dimensions
+        let originalWidth = texture.size().width
+        let originalHeight = texture.size().height
+        
+        // Calculate size scale for the image
+        let sx = screenWidth / originalWidth
+        let sy = screenHeight / originalHeight
+        let scale = min(sx, sy) // Keep aspect ratio
+        
+        // Calculate position scaling
+        let px = screenWidth / originalWidth
+        let py = screenHeight / originalHeight
+        let pscale = min(px, py)
+        
+        // Calculate an offset so that the bottom-left corner is at the specified position
+        let offsetX = screenWidth / 2 - (originalWidth * scale) / 2
+        let offsetY = screenHeight / 2 - (originalHeight * scale) / 2
+
         let spriteNode = SKSpriteNode(texture: texture)
-        spriteNode.position = position
+        
+        spriteNode.position = CGPoint(x: position.x * pscale + offsetX, y: position.y * pscale + offsetY)
+        spriteNode.setScale(scale)
+
         imageNodes.append(spriteNode)
         contentNode.addChild(spriteNode)
     }

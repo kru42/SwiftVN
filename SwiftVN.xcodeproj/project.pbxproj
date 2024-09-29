@@ -75,6 +75,8 @@
 		781A29B02CA7DE0300234AF6 /* SwiftVN-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwiftVN-Bridging-Header.h"; sourceTree = "<group>"; };
 		781A29B82CA7F66900234AF6 /* VLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = VLCKit.xcframework; path = Carthage/Build/VLCKit.xcframework; sourceTree = "<group>"; };
 		7824DE3B2CA819E0003383A7 /* SwiftVN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftVN.swift; sourceTree = "<group>"; };
+		787942252CA99B4200C50CC1 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
+		787942262CA99B4700C50CC1 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		788EC63A2CA848EF006A3562 /* ArchiveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveManager.swift; sourceTree = "<group>"; };
 		788FBCEE2CA92DCA00B976A9 /* TextNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNode.swift; sourceTree = "<group>"; };
 		78918AC72CA8C28900632961 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
@@ -117,9 +119,11 @@
 			children = (
 				781A29A72CA7DCC000234AF6 /* Frameworks */,
 				780EAE402CA76481004624B3 /* Products */,
+				787942262CA99B4700C50CC1 /* README.md */,
 				780EAEF32CA7D85B004624B3 /* SwiftVN */,
 				780EAEFC2CA7D863004624B3 /* SwiftVNTests */,
 				780EAF002CA7D866004624B3 /* SwiftVNUITests */,
+				787942252CA99B4200C50CC1 /* TODO.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -447,7 +451,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -504,7 +508,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
