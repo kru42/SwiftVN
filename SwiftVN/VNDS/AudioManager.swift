@@ -8,7 +8,7 @@ class AudioManager: ObservableObject {
     private var soundPlayer = VLCMediaPlayer()
     
     private var soundVolume: Int32 = 100
-    private var musicVolume: Int32 = 100
+    private var musicVolume: Int32 = 50
     
     private var archiveManager = ArchiveManager(zipFileName: "sound.zip")
     private let logger = LoggerFactory.shared
@@ -56,22 +56,28 @@ class AudioManager: ObservableObject {
         soundPlayer.play()
     }
     
-    func playMusic(songPath: String) {
-        let data = archiveManager.extractFile(named: "sound/\(songPath)")
-        if data == nil {
-            logger.error("Error loading music file")
-            return
+    func playMusic(songPath: String, completion: @escaping () -> Void) {
+        DispatchQueue.global().async {
+            let data = self.archiveManager.extractFile(named: "sound/\(songPath)")
+            if data == nil {
+                self.logger.error("Error loading music file")
+                return
+            }
+            
+            self.musicStream = InputStream(data: data!)
+            guard let media = VLCMedia(stream: self.musicStream!) else {
+                self.logger.critical("Failed to create VLCMedia for music")
+                return
+            }
+            
+            self.music.media = media
+            self.music.audio?.volume = self.musicVolume
+            
+            self.music.play()
+            
+            DispatchQueue.main.async {
+                completion()
+            }
         }
-        
-        musicStream = InputStream(data: data!)
-        guard let media = VLCMedia(stream: musicStream!) else {
-            logger.critical("Failed to create VLCMedia for music")
-            return
-        }
-        
-        music.media = media
-        music.audio?.volume = musicVolume
-        
-        music.play()
     }
 }

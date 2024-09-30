@@ -144,8 +144,12 @@ class TextNode: SKNode {
         // Draw the wrapped lines
         let totalHeight = CGFloat(wrappedLines.count) * lineHeight + padding
         
-        // TODO: Just draw the background once
-        let background = SKShapeNode(rect: CGRect(x: 0, y: 0, width: width, height: totalHeight))
+        // Create a rounded rectangle
+        let cornerRadius: CGFloat = 5.0
+        let backgroundPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: width, height: totalHeight), cornerRadius: cornerRadius)
+        
+        // TODO: Don't redraw
+        let background = SKShapeNode(path: backgroundPath.cgPath)
         background.fillColor = UIColor(red: 0.18, green: 0.204, blue: 0.251, alpha: 0.8)
         background.strokeColor = .clear
         addChild(background)

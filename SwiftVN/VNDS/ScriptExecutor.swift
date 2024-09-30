@@ -20,6 +20,7 @@ class ScriptExecutor: ObservableObject {
     private var labels: [String: Int] = [:]
     
     @Published var isWaitingForInput: Bool = true
+    @Published var isLoadingMusic: Bool = false
     
     private let scene: NovelScene
     private let archiveManager: ArchiveManager = ArchiveManager(zipFileName: "script.zip")
@@ -66,7 +67,7 @@ class ScriptExecutor: ObservableObject {
     
     func executeUntilStopped() {
         while currentLine < script.count {
-            let line = script[currentLine].trimmingCharacters(in: .whitespaces)
+            let line = script[currentLine - 1].trimmingCharacters(in: .whitespaces)
             if line.isEmpty {
                 currentLine += 1
                 continue
@@ -79,6 +80,7 @@ class ScriptExecutor: ObservableObject {
             switch components[0] {
             case "text":
                 executeText(components)
+                logger.debug("\(components.joined(separator: " "))")
                 return
             case "choice":
                 executeChoice(components)
@@ -148,7 +150,14 @@ class ScriptExecutor: ObservableObject {
     
     private func executeMusic(_ components: [String]) {
         // TODO: components[2]
-        scene.audioManager.playMusic(songPath: components[1])
+        if components[1] == "~" {
+            scene.audioManager.clearMusic()
+        } else {
+            isLoadingMusic = true
+            scene.audioManager.playMusic(songPath: components[1]) {
+                self.isLoadingMusic = false
+            }
+        }
     }
     
     private func executeText(_ components: [String]) {

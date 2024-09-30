@@ -19,7 +19,7 @@ class TextManager {
         uiNode.zPosition = 1
         scene.addChild(uiNode)
         
-        textNode = TextNode(fontSize: 16, maxLines: 10, padding: 10)
+        textNode = TextNode(fontSize: 16, maxLines: 10, padding: 12)
         textNode.position = CGPoint(x: 20, y: 20)
         uiNode.addChild(textNode)
     }

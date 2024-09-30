@@ -8,8 +8,7 @@
 import SpriteKit
 
 class NovelScene: SKScene, ObservableObject {
-    private var executor: ScriptExecutor?
-    
+    var executor: ScriptExecutor?
     var textManager: TextManager?
     var spriteManager: SpriteManager?
     
@@ -23,7 +22,7 @@ class NovelScene: SKScene, ObservableObject {
         spriteManager = SpriteManager(scene: self)
         
         executor = ScriptExecutor(scene: self)
-        executor?.loadScript(named: "s02.scr")
+        executor?.loadScript(named: "s01.scr")
     }
     
     func next() {

@@ -9,6 +9,7 @@ import ZIPFoundation
 
 class ArchiveManager {
     var archive: Archive?
+    let logger = LoggerFactory.shared
     
     init(zipFileName: String) {
         // Load ZIP file into the archive
@@ -25,6 +26,11 @@ class ArchiveManager {
         }
     }
     
+    func getFileNames() -> [String] {
+        guard let archive = archive else { return [] }
+        return archive.map { $0.path }
+    }
+    
     func getZipFileURL(for zipFileName: String) -> URL? {
         return SwiftVN.baseDirectory.appendingPathComponent("\(zipFileName)")
     }
@@ -37,16 +43,28 @@ class ArchiveManager {
         
         var fileData = Data()
         
-        do {
-            _ = try archive.extract(archive[fileName]!) { data in
-                fileData.append(data)
+        // Find the file case insensitively
+        // FIXME: It's bugged
+        if let matchingFileName = getFileNames().first(where: { $0.lowercased() == fileName.lowercased() }) {
+            do {
+                guard let entry = archive[matchingFileName] else {
+                    logger.error("Unable to find file \(fileName) in archive")
+                    return nil
+                }
+                
+                _ = try archive.extract(entry) { data in
+                    fileData.append(data)
+                }
+                return fileData
+            } catch {
+                print("Error extracting file: \(error.localizedDescription)")
+                return nil
             }
-            return fileData
-        } catch {
-            print("Error extracting file: \(error.localizedDescription)")
+        } else {
+            print("File not found: \(fileName)")
             return nil
         }
-    }
+//    }
     
     func extractImage(named fileName: String) -> UIImage? {
         guard let data = extractFile(named: fileName) else {

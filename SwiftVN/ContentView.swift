@@ -61,9 +61,16 @@ struct ContentView: View {
                     newScene.next()
                 }
             }
+            
+            if scene?.executor?.isLoadingMusic == true {
+                ProgressView("Loading...")
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .padding()
+                    .background(Color.black.opacity(0.7))
+                    .cornerRadius(10)
+                    .foregroundStyle(.white)
+            }
         }
-        
-        
     }
 }
 
