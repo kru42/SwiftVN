@@ -89,10 +89,8 @@ class ScriptExecutor: ObservableObject {
             case "setimg":
                 executeSetImg(components)
             case "sound":
-                scene.audioManager.clearSound()
                 executeSound(components)
             case "music":
-                scene.audioManager.clearSound()
                 executeMusic(components)
             case "setvar":
                 executeSetVar(components, isGlobal: false)
@@ -131,6 +129,7 @@ class ScriptExecutor: ObservableObject {
     }
     
     private func executeBgLoad(_ components: [String]) {
+        scene.textManager?.textNode.clearText()
         scene.spriteManager?.setBackground(path: components[1], withAnimationFrames: 60)
     }
     
@@ -140,15 +139,16 @@ class ScriptExecutor: ObservableObject {
     
     private func executeSound(_ components: [String]) {
         // TODO: components[2]
-        logger.debug("playing sound \(components[1])")
-        scene.audioManager.loadSound(soundPath: components[1])
-        // scene.audioManager.playSound()
+        if components[1] == "~" {
+            scene.audioManager.clearSound()
+        } else {
+            scene.audioManager.playSound(soundPath: components[1]) // TODO: , loop: components[2] == "-1")
+        }
     }
     
     private func executeMusic(_ components: [String]) {
         // TODO: components[2]
-        scene.audioManager.loadMusic(songPath: components[1])
-        scene.audioManager.playMusic()
+        scene.audioManager.playMusic(songPath: components[1])
     }
     
     private func executeText(_ components: [String]) {

@@ -1,20 +1,11 @@
-//
-//  AudioManager.swift
-//  SwiftVN
-//
-//  Created by Kru on 28/09/24.
-//
-
-import Logging
-
 class AudioManager: ObservableObject {
     static var hasLoaded = false
     
-    private let sound = VLCMediaPlayer()
     private let music = VLCMediaPlayer()
-    
-    private var soundStream: InputStream?
     private var musicStream: InputStream?
+    
+    private var soundStreams: [InputStream] = []
+    private var soundPlayer = VLCMediaPlayer()
     
     private var soundVolume: Int32 = 100
     private var musicVolume: Int32 = 100
@@ -40,89 +31,47 @@ class AudioManager: ObservableObject {
     }
     
     func clearSound() {
-        sound.stop()
+        soundPlayer.stop()
     }
     
-    // TODO: Account for second numeric argument to opcode `sound`
-    func loadSound(soundPath: String) {
+    func playSound(soundPath: String) {
         let data = archiveManager.extractFile(named: "sound/\(soundPath)")
         if data == nil {
-            print("Error loading music file")
+            logger.error("Error loading sound file")
             return
         }
         
-        soundStream = InputStream(data: data!)
-        if soundStream == nil {
-            print("Error creating music stream")
+        let soundStream = InputStream(data: data!)
+        guard let media = VLCMedia(stream: soundStream) else {
+            logger.critical("Failed to create VLCMedia for sound")
             return
         }
-        
-        guard let media = VLCMedia(stream: soundStream!) else {
-            fatalError("Failed to create VLCMedia")
-        }
-        
-        sound.media = media
-    }
+        soundStreams.append(soundStream)
 
-    func loadMusic(path: String) {
-        let soundsPath = SwiftVN.baseDirectory.appendingPathComponent("sound")
+        clearSound()
         
-        // Load the audio source
-        let songUrl = soundsPath.appendingPathComponent(path)
+        soundPlayer.media = media
+        soundPlayer.audio?.volume = soundVolume
         
-        let fm = FileManager.default
-        if !fm.fileExists(atPath: songUrl.path, isDirectory: nil) {
-            print("File does not exist")
-            return
-        }
-
-        music.media = VLCMedia(url: songUrl)
-        
-        if music.media == nil {
-            print("Error loading audio source for music file path \(songUrl.path)")
-            return
-        }
+        soundPlayer.play()
     }
     
-    func loadMusic(songPath: String) {
+    func playMusic(songPath: String) {
         let data = archiveManager.extractFile(named: "sound/\(songPath)")
         if data == nil {
-            print("Error loading music file")
+            logger.error("Error loading music file")
             return
         }
         
         musicStream = InputStream(data: data!)
-        if musicStream == nil {
-            print("Error creating music stream")
+        guard let media = VLCMedia(stream: musicStream!) else {
+            logger.critical("Failed to create VLCMedia for music")
             return
         }
         
-        musicStream!.open()
-        music.media = VLCMedia(stream: musicStream!)
-    }
-    
-    func loadMusic(data: Data) {
-        music.media = VLCMedia(stream: InputStream(data: data))
-        
-        if music.media == nil {
-            print("Error loading audio source for music data")
-            return
-        }
-    }
-    
-    func playMusic() {
-        // TODO: Implement looping (VLCKit only supports it through VLCMediaListPlayer)
-        music.play()
+        music.media = media
         music.audio?.volume = musicVolume
-    }
-    
-    func playSound() {
-        guard sound.media != nil else {
-            logger.critical("Error playing sound: No sound media loaded")
-            fatalError()
-        }
         
-        sound.play()
-        sound.audio?.volume = soundVolume
+        music.play()
     }
 }
