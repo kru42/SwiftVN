@@ -7,7 +7,7 @@
 
 import SpriteKit
 
-class VNScene: SKScene {
+class NovelScene: SKScene {
     var backgroundNode: SKSpriteNode?
     var imageNodes: [SKSpriteNode] = []
     
@@ -18,6 +18,14 @@ class VNScene: SKScene {
     
     private let contentNode = SKNode()
     private let uiNode = SKNode()
+    
+    override private init() {
+        super.init()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func didMove(to view: SKView) {
         backgroundColor = .gray
@@ -37,6 +45,7 @@ class VNScene: SKScene {
     }
     
     private func showNextLine() {
+        // ===== DEBUG =====
         let lines = ["loliejowifio ewjofij ewoifje woifjewoi jfewoi fjewo", "fejnwoijewoi fiewoj ioewfj ioewfj ewoij ewoi", "ハハ、勘煕ﾋヤッテクレヨ津久葉。コイツ今ｴﾋ?ｱ角咨まッテンダ。ナンｶｵノ前、コｭナッテ始メテすけーﾑﾜﾕｱ性ﾀ縷ンダカラサ"]
         
         textNode?.setTextWithAnimation(lines.randomElement()!)
