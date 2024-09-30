@@ -7,13 +7,6 @@
 
 import Foundation
 
-// Notification definitions
-extension Notification.Name {
-    static let loadEvent = Notification.Name("loadEvent")
-    static let assetsLoaded = Notification.Name("assetsLoaded")
-    static let sceneReady = Notification.Name("sceneReady")
-}
-
 class SwiftVN {
     // TODO: currently, we have one single novel placed there. We eventually need a menu with all novels and selection
     // Initialize baseDirectory to the default "novels/"
@@ -39,9 +32,5 @@ class SwiftVN {
         } catch {
             print("Error: \(error.localizedDescription)")
         }
-    }
-    
-    func prepareAssets() {
-        NotificationCenter.default.post(name: .loadEvent, object: nil)
     }
 }

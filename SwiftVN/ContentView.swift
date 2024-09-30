@@ -11,30 +11,20 @@ import Logging
 
 // SwiftUI View
 struct ContentView: View {
-    private var vn = SwiftVN()
-    
-    @StateObject private var audioManager = AudioManager()
-    @StateObject private var sceneLoader = SceneLoader()
     @StateObject private var fpsCounter = FPSCounter()
     
-    @State private var isSceneReady: Bool = false
+    private var vn = SwiftVN()
+    @State private var scene: NovelScene? = nil
     
     private let logger = LoggerFactory.shared
     
     var body: some View {
         ZStack {
-            if sceneLoader.isLoading {
-                ProgressView("Loading...")
-                    .progressViewStyle(CircularProgressViewStyle())
-                    .scaleEffect(1.5, anchor: .center)
-            } else if isSceneReady {
-                SpriteView(scene: sceneLoader.getScene())
+            if let scene = scene {
+                SpriteView(scene: scene)
                     .ignoresSafeArea()
-                    .onAppear {
-                        logger.info("SpriteView displayed.")
-                    }
                     .onTapGesture {
-                        sceneLoader.getScene().handleTap()
+                        scene.next()
                     }
             }
             
@@ -63,35 +53,17 @@ struct ContentView: View {
                 
                 Spacer() // This spacer pushes the HStack to the top
             }
-        }
-        .onAppear {
-            initScene()
-            
-            NotificationCenter.default.addObserver(forName: .sceneReady, object: nil, queue: .main) { _ in
-                let scene = sceneLoader.getScene()
-                logger.info("Loading test background and images...")
-                
-                scene.loadBackground(path: "ba05no1.jpg", withAnimationFrames: 60)
-                scene.setForegroundImage(fileName: "yoh05.png", x: 10, y: 0)
-                
-                audioManager.loadMusic(songPath: "music/s02.mp3")
-                // audioManager.playMusic()
-                
-                logger.info("Drawing some text...")
-                
-                //logger.info("SwiftVN 0.1 loaded")
+            .onAppear {
+                if scene == nil {
+                    let newScene = NovelScene(size: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
+                    newScene.scaleMode = . aspectFill
+                    self.scene = newScene
+                    newScene.next()
+                }
             }
         }
-    }
-    
-    private func initScene() {
-        vn.prepareAssets()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            if SceneLoader.hasLoaded && AudioManager.hasLoaded {
-                self.isSceneReady = true
-            }
-        }
+        
     }
 }
 

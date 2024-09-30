@@ -1,21 +1,36 @@
+//
+//  ScriptExecutor.swift
+//  SwiftVN
+//
+//  Created by Kru on 29/09/24.
+//
+
 import SwiftUI
+import SpriteKit
 
 class ScriptExecutor: ObservableObject {
-    @Published var currentBackground: UIImage?
-    @Published var currentText: String = ""
-    @Published var choices: [String] = []
-    
+    //    @Published var currentBackground: UIImage?
+    //    @Published var currentText: String = ""
+    //    @Published var choices: [String] = []
+    //
     private var script: [String] = []
     private var currentLine: Int = 0
     private var variables: [String: Any] = [:]
     private var globalVariables: [String: Any] = [:]
     private var labels: [String: Int] = [:]
     
+    private var isWaitingForTextCompletion = false
+    
+    private let scene: NovelScene
     private let archiveManager: ArchiveManager = ArchiveManager(zipFileName: "script.zip")
     private let logger = LoggerFactory.shared
     
+    init(scene: NovelScene) {
+        self.scene = scene
+    }
+    
     func loadScript(named scriptName: String) {
-        guard let scriptData = archiveManager.extractFile(named: scriptName) else {
+        guard let scriptData = archiveManager.extractFile(named: "script/\(scriptName)") else {
             logger.critical("Failed to load script: \(scriptName)")
             fatalError()
         }
@@ -38,74 +53,112 @@ class ScriptExecutor: ObservableObject {
         }
     }
     
-    func executeNextLine() {
-        guard currentLine < script.count else { return }
-        
-        let line = script[currentLine].trimmingCharacters(in: .whitespaces)
-        let components = line.components(separatedBy: " ")
-        
-        switch components[0] {
-        case "bgload":
-            executeBgLoad(components)
-        case "setimg":
-            executeSetImg(components)
-        case "sound":
-            executeSound(components)
-        case "music":
-            executeMusic(components)
-        case "text":
-            executeText(components)
-        case "choice":
-            executeChoice(components)
-        case "setvar":
-            executeSetVar(components, isGlobal: false)
-        case "gsetvar":
-            executeSetVar(components, isGlobal: true)
-        case "if":
-            executeIf(components)
-        case "fi":
-            // Do nothing, just move to the next line
-            break
-        case "jump":
-            executeJump(components)
-        case "delay":
-            executeDelay(components)
-        case "random":
-            executeRandom(components)
-        case "label":
-            // Labels are parsed at load time, so we can skip them during execution
-            break
-        case "goto":
-            executeGoto(components)
-        default:
-            print("Unknown command: \(components[0])")
+    func next() {
+        if isWaitingForTextCompletion {
+            if scene.textManager?.textNode.isAnimationComplete != false {
+                isWaitingForTextCompletion = false
+                currentLine += 1
+            } else {
+                scene.textManager?.textNode.skipAnimation()
+                return
+            }
         }
         
-        currentLine += 1
+        executeUntilStopped()
+    }
+    
+    func executeUntilStopped() {
+        while currentLine < script.count {
+            let line = script[currentLine].trimmingCharacters(in: .whitespaces)
+            if line.isEmpty {
+                currentLine += 1
+                continue
+            }
+            
+            let components = line.components(separatedBy: " ")
+            
+            logger.debug("Executing command \(components[0])")
+            
+            switch components[0] {
+            case "text":
+                if executeText(components) {
+                    isWaitingForTextCompletion = true
+                    return
+                }
+            case "choice":
+                executeChoice(components)
+                return
+            case "bgload":
+                executeBgLoad(components)
+            case "setimg":
+                executeSetImg(components)
+            case "sound":
+                executeSound(components)
+            case "music":
+                executeMusic(components)
+            case "setvar":
+                executeSetVar(components, isGlobal: false)
+            case "gsetvar":
+                executeSetVar(components, isGlobal: true)
+            case "if":
+                executeIf(components)
+            case "fi":
+                // Do nothing, just move to the next line
+                break
+            case "jump":
+                executeJump(components)
+            case "delay":
+                executeDelay(components)
+            case "random":
+                executeRandom(components)
+            case "label":
+                // Labels are parsed at load time, so we can skip them during execution
+                break
+            case "goto":
+                executeGoto(components)
+            default:
+                print("Unknown command: \(components[0])")
+            }
+            
+            currentLine += 1
+        }
+    }
+    
+    private func toCgFloat(_ str: String) -> CGFloat {
+        guard let result = (Double(str).map{ CGFloat($0) }) else {
+            fatalError("Could not convert \(str) to CGFloat")
+        }
+        
+        return result
     }
     
     private func executeBgLoad(_ components: [String]) {
-        
+        scene.spriteManager?.setBackground(path: components[1], withAnimationFrames: 60)
     }
     
     private func executeSetImg(_ components: [String]) {
-        // Similar to bgload, but for foreground images
-        // Implement based on your specific requirements
+        scene.spriteManager?.setForeground(fileName: components[1], x: toCgFloat(components[2]), y: toCgFloat(components[3]))
     }
     
     private func executeSound(_ components: [String]) {
-        
+        // TODO: components[2]
+        logger.debug("playing sound \(components[1])")
+        scene.audioManager.loadSound(soundPath: components[1])
+        // FIXME: idk doesnt work
+        // scene.audioManager.playSound()
     }
     
     private func executeMusic(_ components: [String]) {
-        // Similar to sound, but for background music
-        // You might want to use a different AVAudioPlayer instance for music
+        // TODO: components[2]
+        scene.audioManager.loadMusic(songPath: components[1])
+        scene.audioManager.playMusic()
     }
     
-    private func executeText(_ components: [String]) {
-        let text = components.dropFirst().joined(separator: " ")
+    // Returns true if advanced, false if skipped animation
+    private func executeText(_ components: [String]) -> Bool {
+        let text = components.dropFirst().joined(separator: " ").trimmingCharacters(in: CharacterSet(charactersIn: "\""))
         let interpolatedText = interpolateText(text)
-        currentText = interpolatedText
+        return scene.textManager?.setText(interpolatedText) != nil
     }
     
     private func interpolateText(_ text: String) -> String {

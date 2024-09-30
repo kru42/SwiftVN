@@ -7,9 +7,8 @@
 
 import Logging
 
-class AudioManager: Loadable, ObservableObject {
+class AudioManager: ObservableObject {
     static var hasLoaded = false
-    private var archiveManager: ArchiveManager?
     
     private let sound = VLCMediaPlayer()
     private let music = VLCMediaPlayer()
@@ -20,6 +19,7 @@ class AudioManager: Loadable, ObservableObject {
     private var soundVolume: Int32 = 100
     private var musicVolume: Int32 = 100
     
+    private var archiveManager = ArchiveManager(zipFileName: "sound.zip")
     private let logger = LoggerFactory.shared
     
     private let fileType: [String: String] = [
@@ -35,19 +35,6 @@ class AudioManager: Loadable, ObservableObject {
         "audio/x-ms-wma": "wma"
     ]
     
-    init() {
-        NotificationCenter.default.addObserver(self, selector: #selector(handleLoadEvent), name: .loadEvent, object: nil)
-    }
-    
-    @objc func handleLoadEvent(_ notification: Notification) {
-        tryLoad()
-    }
-    
-    func loadHandler() {
-        logger.info("Opening sounds ZIP...")
-        archiveManager = ArchiveManager(zipFileName: "sound.zip")
-    }
- 
     func clearMusic() {
         music.stop()
     }
@@ -58,24 +45,29 @@ class AudioManager: Loadable, ObservableObject {
     
     // TODO: Account for second numeric argument to opcode `sound`
     func loadSound(soundPath: String) {
-        let data = archiveManager?.extractFile(named: "sound/\(soundPath)")
+        clearSound()
+        
+        let data = archiveManager.extractFile(named: "sound/\(soundPath)")
         if data == nil {
             print("Error loading music file")
             return
         }
         
-        musicStream = InputStream(data: data!)
-        if musicStream == nil {
+        soundStream = InputStream(data: data!)
+        if soundStream == nil {
             print("Error creating music stream")
             return
         }
         
-        musicStream?.open()
-        music.media = VLCMedia(stream: musicStream!)
+        guard let media = VLCMedia(stream: soundStream!) else {
+            fatalError("Failed to create VLCMedia")
+        }
+        
+        sound.media = media
     }
 
     func loadMusic(path: String) {
-        var soundsPath = SwiftVN.baseDirectory.appendingPathComponent("sound")
+        let soundsPath = SwiftVN.baseDirectory.appendingPathComponent("sound")
         
         // Load the audio source
         let songUrl = soundsPath.appendingPathComponent(path)
@@ -88,14 +80,14 @@ class AudioManager: Loadable, ObservableObject {
 
         music.media = VLCMedia(url: songUrl)
         
-        if (music.media == nil) {
+        if music.media == nil {
             print("Error loading audio source for music file path \(songUrl.path)")
             return
         }
     }
     
     func loadMusic(songPath: String) {
-        let data = archiveManager?.extractFile(named: "sound/\(songPath)")
+        let data = archiveManager.extractFile(named: "sound/\(songPath)")
         if data == nil {
             print("Error loading music file")
             return
@@ -107,26 +99,40 @@ class AudioManager: Loadable, ObservableObject {
             return
         }
         
-        musicStream?.open()
+        musicStream!.open()
         music.media = VLCMedia(stream: musicStream!)
     }
     
     func loadMusic(data: Data) {
         music.media = VLCMedia(stream: InputStream(data: data))
         
-        if (music.media == nil) {
+        if music.media == nil {
             print("Error loading audio source for music data")
             return
         }
     }
     
     func playMusic() {
-        if (music.isPlaying) {
+        if music.isPlaying {
             clearMusic()
         }
         
         // TODO: Implement looping (VLCKit only supports it through VLCMediaListPlayer)
         music.play()
         music.audio?.volume = musicVolume
+    }
+    
+    func playSound() {
+        if sound.isPlaying {
+            clearSound()
+        }
+        
+        guard sound.media != nil else {
+            logger.critical("Error playing sound: No sound media loaded")
+            fatalError()
+        }
+        
+        sound.play()
+        sound.audio?.volume = soundVolume
     }
 }

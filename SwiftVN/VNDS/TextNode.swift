@@ -19,7 +19,7 @@ class TextNode: SKNode {
     private var labelNodes: [SKLabelNode] = []
     private var animationTimer: Timer?
     var isAnimating: Bool = false
-    var isAnimationComplete: Bool = false
+    var isAnimationComplete: Bool = true
     
     init(fontSize: CGFloat = 16, maxLines: Int = 3, padding: CGFloat = 20) {
         self.fontSize = fontSize
