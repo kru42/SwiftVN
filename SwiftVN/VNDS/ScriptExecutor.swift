@@ -162,7 +162,7 @@ class ScriptExecutor: ObservableObject {
         
         textManager.setText(interpolatedText) { [weak self] in
             guard let self = self else { return }
-            if interpolatedText != "~" {
+            if interpolatedText == "~" {
                 self.currentLine += 1
                 self.executeUntilStopped()
             } else {
