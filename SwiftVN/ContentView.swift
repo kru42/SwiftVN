@@ -15,6 +15,7 @@ struct ContentView: View {
     
     private var vn = SwiftVN()
     @State private var scene: NovelScene? = nil
+    @State private var showHistoryOverlay = false
     
     private let logger = LoggerFactory.shared
     
@@ -24,7 +25,9 @@ struct ContentView: View {
                 SpriteView(scene: scene)
                     .ignoresSafeArea()
                     .onTapGesture {
-                        scene.next()
+                        if (!showHistoryOverlay) {
+                            scene.next()
+                        }
                     }
             }
             
@@ -47,6 +50,14 @@ struct ContentView: View {
                             .foregroundStyle(.white)
                             .padding(.horizontal, 10)
                             .padding(.vertical, 5)
+                    }
+                    Button(action: {
+                        showHistoryOverlay.toggle()
+                        scene?.toggleHistoryOverlay()
+                    }) {
+                        Image(systemName: "clock.arrow.circlepath")
+                            .foregroundStyle(.white)
+                            .cornerRadius(10) // FIXME: deprecated
                     }
                 }
                 .background(Color.black.opacity(0.5))

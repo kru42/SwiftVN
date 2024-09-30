@@ -1,11 +1,22 @@
+//
+// AudioManager.swift
+//
+
 class AudioManager: ObservableObject {
     static var hasLoaded = false
     
-    private let music = VLCMediaPlayer()
-    private var musicStream: InputStream?
+    private var musicPlayer = VLCMediaPlayer()
+    private var musicStreams: [InputStream] = []
     
-    private var soundStreams: [InputStream] = []
     private var soundPlayer = VLCMediaPlayer()
+    // FIXME: Don't leak streams pls
+    private var soundStreams: [InputStream] = []
+
+    // Only support one looping sound playing at the moment
+    private var loopPlayer = VLCMediaPlayer()
+    private var loopStream: InputStream?
+    
+    private let audioQueue = DispatchQueue(label: "com.kru42.SwiftVN.audioqueue")
     
     private var soundVolume: Int32 = 100
     private var musicVolume: Int32 = 50
@@ -27,57 +38,80 @@ class AudioManager: ObservableObject {
     ]
     
     func clearMusic() {
-        music.stop()
+        if musicPlayer.isPlaying {
+            musicPlayer.stop()
+        }
     }
     
     func clearSound() {
-        soundPlayer.stop()
+        if soundPlayer.isPlaying {
+            soundPlayer.stop()
+        }
     }
     
-    func playSound(soundPath: String) {
-        let data = archiveManager.extractFile(named: "sound/\(soundPath)")
-        if data == nil {
-            logger.error("Error loading sound file")
-            return
+    func clearLoop() {
+        if loopPlayer.isPlaying {
+            loopPlayer.stop()
         }
-        
-        let soundStream = InputStream(data: data!)
-        guard let media = VLCMedia(stream: soundStream) else {
-            logger.critical("Failed to create VLCMedia for sound")
-            return
+    }
+    
+    func playSound(soundPath: String, loop: Bool = false) {
+        archiveManager.extractFile(named: "sound/\(soundPath)") { data in
+            if data == nil {
+                self.logger.error("Error loading sound file")
+                return
+            }
+            
+            let stream = InputStream(data: data!)
+            guard let media = VLCMedia(stream: stream) else {
+                self.logger.critical("Failed to create VLCMedia for sound")
+                return
+            }
+            self.soundStreams.append(stream)
+            
+            if loop {
+                self.clearLoop()
+                
+                self.loopPlayer.media = media
+                self.loopPlayer.audio?.volume = self.soundVolume
+                
+                // TODO: Loop
+                self.loopPlayer.play()
+                return
+            }
+            
+            self.clearSound()
+            
+            self.soundPlayer.media = media
+            self.soundPlayer.audio?.volume = self.soundVolume
+            
+            self.soundPlayer.play()
         }
-        soundStreams.append(soundStream)
-
-        clearSound()
-        
-        soundPlayer.media = media
-        soundPlayer.audio?.volume = soundVolume
-        
-        soundPlayer.play()
     }
     
     func playMusic(songPath: String, completion: @escaping () -> Void) {
-        DispatchQueue.global().async {
-            let data = self.archiveManager.extractFile(named: "sound/\(songPath)")
+        self.archiveManager.extractFile(named: "sound/\(songPath)") { data in
             if data == nil {
                 self.logger.error("Error loading music file")
                 return
             }
             
-            self.musicStream = InputStream(data: data!)
-            guard let media = VLCMedia(stream: self.musicStream!) else {
+            let stream = InputStream(data: data!)
+            guard let media = VLCMedia(stream: stream) else {
                 self.logger.critical("Failed to create VLCMedia for music")
                 return
             }
             
-            self.music.media = media
-            self.music.audio?.volume = self.musicVolume
+            self.musicStreams.append(stream)
             
-            self.music.play()
+            self.clearMusic()
+
+            self.musicPlayer.media = media
+            self.musicPlayer.audio?.volume = self.musicVolume
             
-            DispatchQueue.main.async {
-                completion()
-            }
+            self.musicPlayer.play()
+            
+            completion()
         }
     }
 }

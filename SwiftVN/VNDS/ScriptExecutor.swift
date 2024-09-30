@@ -9,10 +9,6 @@ import SwiftUI
 import SpriteKit
 
 class ScriptExecutor: ObservableObject {
-    //    @Published var currentBackground: UIImage?
-    //    @Published var currentText: String = ""
-    //    @Published var choices: [String] = []
-    //
     private var script: [String] = []
     private var currentLine: Int = 0
     private var variables: [String: Any] = [:]
@@ -31,18 +27,19 @@ class ScriptExecutor: ObservableObject {
     }
     
     func loadScript(named scriptName: String) {
-        guard let scriptData = archiveManager.extractFile(named: "script/\(scriptName)") else {
-            logger.critical("Failed to load script: \(scriptName)")
-            fatalError()
+        archiveManager.extractFile(named: "script/\(scriptName)") { scriptData in
+            if scriptData == nil {
+                fatalError("Failed to extract script file")
+            }
+            
+            guard let scriptContent = String(data: scriptData!, encoding: .utf8) else {
+                self.logger.critical("Failed to decode script data")
+                fatalError()
+            }
+            
+            self.script = scriptContent.components(separatedBy: .newlines)
+            self.parseLabels()
         }
-        
-        guard let scriptContent = String(data: scriptData, encoding: .utf8) else {
-            logger.critical("Failed to decode script data")
-            fatalError()
-        }
-        
-        script = scriptContent.components(separatedBy: .newlines)
-        parseLabels()
     }
     
     private func parseLabels() {
@@ -80,7 +77,6 @@ class ScriptExecutor: ObservableObject {
             switch components[0] {
             case "text":
                 executeText(components)
-                logger.debug("\(components.joined(separator: " "))")
                 return
             case "choice":
                 executeChoice(components)
@@ -141,6 +137,7 @@ class ScriptExecutor: ObservableObject {
     
     private func executeSound(_ components: [String]) {
         // TODO: components[2]
+        // components.forEach { logger.debug("\($0)") }
         if components[1] == "~" {
             scene.audioManager.clearSound()
         } else {
@@ -153,7 +150,7 @@ class ScriptExecutor: ObservableObject {
         if components[1] == "~" {
             scene.audioManager.clearMusic()
         } else {
-            isLoadingMusic = true
+            self.isLoadingMusic = true
             scene.audioManager.playMusic(songPath: components[1]) {
                 self.isLoadingMusic = false
             }
@@ -169,12 +166,30 @@ class ScriptExecutor: ObservableObject {
             return
         }
         
+        if components[1] == "!" {
+            textManager.clearText()
+            self.isWaitingForInput = true
+            return
+        }
+        
+        if interpolatedText.starts(with: "@") {
+            textManager.setText(String(interpolatedText.dropFirst())) { [weak self] in
+                guard let self = self else { return }
+                self.scene.historyOverlay.addHistoryLine(String(interpolatedText.dropFirst()))
+                self.currentLine += 1
+                self.executeUntilStopped()
+            }
+            
+            return
+        }
+
         textManager.setText(interpolatedText) { [weak self] in
             guard let self = self else { return }
             if interpolatedText == "~" {
                 self.currentLine += 1
                 self.executeUntilStopped()
             } else {
+                self.scene.historyOverlay.addHistoryLine(interpolatedText)
                 self.isWaitingForInput = true
             }
         }
@@ -197,8 +212,10 @@ class ScriptExecutor: ObservableObject {
     }
     
     private func executeChoice(_ components: [String]) {
-//        choices = components.dropFirst()
-//        variables["selected"] = 0 // Will be updated when user makes a choice
+        // Get components separated by "|"
+        // TODO: do
+        let choices = components.dropFirst().joined(separator: " ").components(separatedBy: "|")
+        variables["selected"] = 1 // Will be updated when user makes a choice
     }
     
     private func executeSetVar(_ components: [String], isGlobal: Bool) {
@@ -291,6 +308,7 @@ class ScriptExecutor: ObservableObject {
         guard components.count >= 2, let frames = Int(components[1]) else { return }
         let seconds = Double(frames) / 60.0
         // Stub: Implement actual delay
+        unistd.usleep(UInt32(seconds * 1_000_000))
         print("Delaying for \(seconds) seconds")
     }
     

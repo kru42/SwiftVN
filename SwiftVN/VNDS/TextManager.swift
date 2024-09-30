@@ -13,13 +13,13 @@ class TextManager {
     var textNode: TextNode
     private let uiNode = SKNode()
     
-    init(scene: SKScene) {
+    init(scene: SKScene, textNode: TextNode = TextNode(fontSize: 16, maxLines: 10, padding: 12)) {
         self.scene = scene
         
         uiNode.zPosition = 1
         scene.addChild(uiNode)
         
-        textNode = TextNode(fontSize: 16, maxLines: 10, padding: 12)
+        self.textNode = textNode
         textNode.position = CGPoint(x: 20, y: 20)
         uiNode.addChild(textNode)
     }
@@ -29,5 +29,9 @@ class TextManager {
             textNode.skipAnimation()
         }
         textNode.addTextWithAnimation(text, completion: completion)
+    }
+    
+    func clearText() {
+        textNode.clearText()
     }
 }

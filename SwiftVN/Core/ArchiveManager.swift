@@ -5,72 +5,82 @@
 //  Created by Kru on 28/09/24.
 //
 
+import Foundation
 import ZIPFoundation
+import Dispatch
 
 class ArchiveManager {
-    var archive: Archive?
-    let logger = LoggerFactory.shared
+    private var archive: Archive?
+    private let logger = LoggerFactory.shared
+    private let queue = DispatchQueue(label: "com.archivemanager.queue", attributes: .concurrent)
     
     init(zipFileName: String) {
-        // Load ZIP file into the archive
-        guard let zipFileURL = getZipFileURL(for: zipFileName) else {
-            print("Error: ZIP file not found.")
-            return
-        }
-        
-        do {
-            archive = try Archive.init(url: zipFileURL, accessMode: .read, pathEncoding: String.Encoding.utf8)
-        } catch {
-            print("Error loading ZIP file: \(error.localizedDescription)")
-            return
-        }
-    }
-    
-    func getFileNames() -> [String] {
-        guard let archive = archive else { return [] }
-        return archive.map { $0.path }
-    }
-    
-    func getZipFileURL(for zipFileName: String) -> URL? {
-        return SwiftVN.baseDirectory.appendingPathComponent("\(zipFileName)")
-    }
-    
-    func extractFile(named fileName: String) -> Data? {
-        guard let archive = archive else {
-            print("No archive loaded.")
-            return nil
-        }
-        
-        var fileData = Data()
-        
-        // Find the file case insensitively
-        // FIXME: It's bugged
-        if let matchingFileName = getFileNames().first(where: { $0.lowercased() == fileName.lowercased() }) {
-            do {
-                guard let entry = archive[matchingFileName] else {
-                    logger.error("Unable to find file \(fileName) in archive")
-                    return nil
-                }
-                
-                _ = try archive.extract(entry) { data in
-                    fileData.append(data)
-                }
-                return fileData
-            } catch {
-                print("Error extracting file: \(error.localizedDescription)")
-                return nil
+        queue.async(flags: .barrier) { [weak self] in
+            guard let self = self else { return }
+            guard let zipFileURL = self.getZipFileURL(for: zipFileName) else {
+                self.logger.error("Error: ZIP file not found.")
+                return
             }
-        } else {
-            print("File not found: \(fileName)")
-            return nil
+            
+            do {
+                self.archive = try Archive(url: zipFileURL, accessMode: .read, pathEncoding: .utf8)
+            } catch {
+                self.logger.error("Error loading ZIP file: \(error.localizedDescription)")
+            }
         }
-//    }
+    }
     
-    func extractImage(named fileName: String) -> UIImage? {
-        guard let data = extractFile(named: fileName) else {
-            return nil
+    private func getZipFileURL(for zipFileName: String) -> URL? {
+        return SwiftVN.baseDirectory.appendingPathComponent(zipFileName)
+    }
+    
+    func extractFile(named fileName: String, completion: @escaping (Data?) -> Void) {
+        queue.sync { [weak self] in
+            guard let self = self else {
+                completion(nil)
+                return
+            }
+            
+            guard let archive = self.archive else {
+                self.logger.error("No archive loaded.")
+                completion(nil)
+                return
+            }
+            
+            var fileData = Data()
+            let lowercasedFileName = fileName.lowercased()
+            
+            if let matchingFileName = archive.first(where: { $0.path.lowercased() == lowercasedFileName })?.path {
+                do {
+                    guard let entry = archive[matchingFileName] else {
+                        self.logger.error("Unable to find file \(fileName) in archive")
+                        completion(nil)
+                        return
+                    }
+                    
+                    _ = try archive.extract(entry) { data in
+                        fileData.append(data)
+                    }
+                    completion(fileData)
+                } catch {
+                    self.logger.error("Error extracting file: \(error.localizedDescription)")
+                    completion(nil)
+                }
+            } else {
+                self.logger.error("File not found: \(fileName)")
+                completion(nil)
+            }
         }
-        
-        return UIImage(data: data)
+    }
+    
+    func extractImage(named fileName: String, completion: @escaping (UIImage?) -> Void) {
+        extractFile(named: fileName) { data in
+            guard let data = data else {
+                completion(nil)
+                return
+            }
+            
+            completion(UIImage(data: data))
+        }
     }
 }

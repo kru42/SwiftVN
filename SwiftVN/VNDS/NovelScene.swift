@@ -7,10 +7,12 @@
 
 import SpriteKit
 
+// more like LeakalotScene
 class NovelScene: SKScene, ObservableObject {
     var executor: ScriptExecutor?
     var textManager: TextManager?
     var spriteManager: SpriteManager?
+    var historyOverlay: HistoryOverlayNode!
     
     var audioManager = AudioManager()
 
@@ -18,14 +20,24 @@ class NovelScene: SKScene, ObservableObject {
         backgroundColor = .gray
         
         // Instantiate or re-instantiate UI elements and scripts
-        textManager = TextManager(scene: self)
+        let textNode = TextNode(fontSize: 16, maxLines: 10, padding: 12)
+        
+        textManager = TextManager(scene: self, textNode: textNode)
         spriteManager = SpriteManager(scene: self)
         
+        historyOverlay = HistoryOverlayNode(size: self.size)
+        historyOverlay.isHidden = true
+        
         executor = ScriptExecutor(scene: self)
-        executor?.loadScript(named: "s01.scr")
+        executor?.loadScript(named: "main.scr")
     }
     
     func next() {
         executor?.next()
     }
+    
+    func toggleHistoryOverlay() {
+        historyOverlay.isHidden.toggle()
+    }
 }
+

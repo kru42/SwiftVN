@@ -56,7 +56,7 @@ class TextNode: SKNode {
         // Concatenate new text with existing text
         if !textString.isEmpty {
             currentTextLine = textString
-            textString = "\(textString) \(line)"
+            textString = "\(textString)  \(line)"
             currentCharacterIndex = currentTextLine.count
         } else {
             currentTextLine = ""
