@@ -44,16 +44,33 @@ class TextNode: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setTextWithAnimation(_ line: String, delay: TimeInterval = 0.05) {
-        stopAnimation()
+    func addTextWithAnimation(_ line: String, delay: TimeInterval = 0.05, completion: @escaping () -> Void) {
+        if line == "~" {
+            clearText()
+            completion()
+            return
+        }
         
-        self.textString = line
-        self.currentTextLine = "" // Prepare for animation
+        var currentCharacterIndex: Int
+        
+        // Concatenate new text with existing text
+        if !textString.isEmpty {
+            currentTextLine = textString
+            textString = "\(textString) \(line)"
+            currentCharacterIndex = currentTextLine.count
+        } else {
+            currentTextLine = ""
+            textString = line
+            currentCharacterIndex = 0
+        }
+        
         self.isAnimating = true
         self.isAnimationComplete = false
         
-        let characters = Array(line)
-        var currentCharacterIndex = 0
+        let characters = Array(textString)
+        
+        // Stop any existing animation
+        stopAnimation()
         
         // Timer to manage the character display
         animationTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: true) { [weak self] timer in
@@ -66,6 +83,7 @@ class TextNode: SKNode {
                 currentCharacterIndex += 1
             } else {
                 self.stopAnimation()
+                completion()
             }
         }
         
@@ -88,6 +106,10 @@ class TextNode: SKNode {
     func setNeedsDisplay() {
         removeAllChildren()
         self.drawText()
+    }
+    
+    func clearText() {
+        self.textString = ""
     }
     
     private func drawText() {

@@ -45,8 +45,6 @@ class AudioManager: ObservableObject {
     
     // TODO: Account for second numeric argument to opcode `sound`
     func loadSound(soundPath: String) {
-        clearSound()
-        
         let data = archiveManager.extractFile(named: "sound/\(soundPath)")
         if data == nil {
             print("Error loading music file")
@@ -113,20 +111,12 @@ class AudioManager: ObservableObject {
     }
     
     func playMusic() {
-        if music.isPlaying {
-            clearMusic()
-        }
-        
         // TODO: Implement looping (VLCKit only supports it through VLCMediaListPlayer)
         music.play()
         music.audio?.volume = musicVolume
     }
     
     func playSound() {
-        if sound.isPlaying {
-            clearSound()
-        }
-        
         guard sound.media != nil else {
             logger.critical("Error playing sound: No sound media loaded")
             fatalError()

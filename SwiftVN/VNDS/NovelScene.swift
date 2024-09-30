@@ -23,7 +23,7 @@ class NovelScene: SKScene, ObservableObject {
         spriteManager = SpriteManager(scene: self)
         
         executor = ScriptExecutor(scene: self)
-        executor?.loadScript(named: "s01.scr")
+        executor?.loadScript(named: "s02.scr")
     }
     
     func next() {

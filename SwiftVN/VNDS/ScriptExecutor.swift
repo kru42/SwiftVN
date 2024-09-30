@@ -19,7 +19,7 @@ class ScriptExecutor: ObservableObject {
     private var globalVariables: [String: Any] = [:]
     private var labels: [String: Int] = [:]
     
-    private var isWaitingForTextCompletion = false
+    @Published var isWaitingForInput: Bool = true
     
     private let scene: NovelScene
     private let archiveManager: ArchiveManager = ArchiveManager(zipFileName: "script.zip")
@@ -54,17 +54,14 @@ class ScriptExecutor: ObservableObject {
     }
     
     func next() {
-        if isWaitingForTextCompletion {
-            if scene.textManager?.textNode.isAnimationComplete != false {
-                isWaitingForTextCompletion = false
-                currentLine += 1
-            } else {
-                scene.textManager?.textNode.skipAnimation()
-                return
-            }
+        if isWaitingForInput {
+            isWaitingForInput = false
+            currentLine += 1
+            executeUntilStopped()
+        } else {
+            scene.textManager?.textNode.skipAnimation()
+            isWaitingForInput = true
         }
-        
-        executeUntilStopped()
     }
     
     func executeUntilStopped() {
@@ -81,20 +78,21 @@ class ScriptExecutor: ObservableObject {
             
             switch components[0] {
             case "text":
-                if executeText(components) {
-                    isWaitingForTextCompletion = true
-                    return
-                }
+                executeText(components)
+                return
             case "choice":
                 executeChoice(components)
+                currentLine += 1
                 return
             case "bgload":
                 executeBgLoad(components)
             case "setimg":
                 executeSetImg(components)
             case "sound":
+                scene.audioManager.clearSound()
                 executeSound(components)
             case "music":
+                scene.audioManager.clearSound()
                 executeMusic(components)
             case "setvar":
                 executeSetVar(components, isGlobal: false)
@@ -144,7 +142,6 @@ class ScriptExecutor: ObservableObject {
         // TODO: components[2]
         logger.debug("playing sound \(components[1])")
         scene.audioManager.loadSound(soundPath: components[1])
-        // FIXME: idk doesnt work
         // scene.audioManager.playSound()
     }
     
@@ -154,11 +151,24 @@ class ScriptExecutor: ObservableObject {
         scene.audioManager.playMusic()
     }
     
-    // Returns true if advanced, false if skipped animation
-    private func executeText(_ components: [String]) -> Bool {
-        let text = components.dropFirst().joined(separator: " ").trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+    private func executeText(_ components: [String]) {
+        let text = components.dropFirst().joined(separator: " ")
         let interpolatedText = interpolateText(text)
-        return scene.textManager?.setText(interpolatedText) != nil
+        
+        guard let textManager = scene.textManager else {
+            logger.error("TextManager not initialized")
+            return
+        }
+        
+        textManager.setText(interpolatedText) { [weak self] in
+            guard let self = self else { return }
+            if interpolatedText != "~" {
+                self.currentLine += 1
+                self.executeUntilStopped()
+            } else {
+                self.isWaitingForInput = true
+            }
+        }
     }
     
     private func interpolateText(_ text: String) -> String {

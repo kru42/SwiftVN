@@ -23,17 +23,11 @@ class TextManager {
         textNode.position = CGPoint(x: 20, y: 20)
         uiNode.addChild(textNode)
     }
-   
-    // Returns true if next, false if skipped animation
-    func setText(_ text: String) -> Bool {
+    
+    func setText(_ text: String, completion: @escaping () -> Void) {
         if textNode.isAnimating {
             textNode.skipAnimation()
-            return false
-        } else if textNode.isAnimationComplete {
-            textNode.setTextWithAnimation(text)
-            return true
         }
-        
-        fatalError("no")
+        textNode.addTextWithAnimation(text, completion: completion)
     }
 }
