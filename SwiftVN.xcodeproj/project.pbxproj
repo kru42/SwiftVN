@@ -21,6 +21,7 @@
 		7824DE3C2CA819E9003383A7 /* SwiftVN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7824DE3B2CA819E0003383A7 /* SwiftVN.swift */; };
 		7859C39C2CA849C200051A60 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 7859C39B2CA849C200051A60 /* ZIPFoundation */; };
 		785C03A32CAB556400C27C66 /* HistoryOverlayNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C03A22CAB556000C27C66 /* HistoryOverlayNode.swift */; };
+		785C03A52CABE07800C27C66 /* sazanami-gothic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 785C03A42CABE07800C27C66 /* sazanami-gothic.ttf */; };
 		788EC63B2CA848F1006A3562 /* ArchiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788EC63A2CA848EF006A3562 /* ArchiveManager.swift */; };
 		788FBCEF2CA92DCD00B976A9 /* TextNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788FBCEE2CA92DCA00B976A9 /* TextNode.swift */; };
 		78918ACB2CA8C28900632961 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78918AC72CA8C28900632961 /* AudioManager.swift */; };
@@ -77,6 +78,7 @@
 		781A29B82CA7F66900234AF6 /* VLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = VLCKit.xcframework; path = Carthage/Build/VLCKit.xcframework; sourceTree = "<group>"; };
 		7824DE3B2CA819E0003383A7 /* SwiftVN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftVN.swift; sourceTree = "<group>"; };
 		785C03A22CAB556000C27C66 /* HistoryOverlayNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryOverlayNode.swift; sourceTree = "<group>"; };
+		785C03A42CABE07800C27C66 /* sazanami-gothic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "sazanami-gothic.ttf"; sourceTree = "<group>"; };
 		787942252CA99B4200C50CC1 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
 		787942262CA99B4700C50CC1 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		787942272CA9A3FA00C50CC1 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 				787942262CA99B4700C50CC1 /* README.md */,
 				787942252CA99B4200C50CC1 /* TODO.md */,
 				787942272CA9A3FA00C50CC1 /* LICENSE */,
+				785C03A42CABE07800C27C66 /* sazanami-gothic.ttf */,
 			);
 			sourceTree = "<group>";
 		};
@@ -333,6 +336,7 @@
 			files = (
 				780EAEF42CA7D85B004624B3 /* Preview Assets.xcassets in Resources */,
 				780EAEF52CA7D85B004624B3 /* Assets.xcassets in Resources */,
+				785C03A52CABE07800C27C66 /* sazanami-gothic.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

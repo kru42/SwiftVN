@@ -105,7 +105,7 @@ class AudioManager: ObservableObject {
             self.musicStreams.append(stream)
             
             self.clearMusic()
-
+            
             self.musicPlayer.media = media
             self.musicPlayer.audio?.volume = self.musicVolume
             

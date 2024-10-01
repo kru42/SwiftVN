@@ -26,8 +26,9 @@ class TextNode: SKNode {
         self.maxLines = maxLines
         self.padding = padding
         
-        let fontURL = SwiftVN.baseDirectory.appendingPathComponent("default.ttf")
-        
+        // let fontURL = SwiftVN.baseDirectory.appendingPathComponent("default.ttf")
+        let fontURL = Bundle.main.bundleURL.appendingPathComponent("sazanami-gothic.ttf")
+
         // Load novel custom font
         if let fontDataProvider = CGDataProvider(url: fontURL as CFURL),
            let font = CGFont(fontDataProvider) {

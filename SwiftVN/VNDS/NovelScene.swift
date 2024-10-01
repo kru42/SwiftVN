@@ -17,7 +17,7 @@ class NovelScene: SKScene, ObservableObject {
     var audioManager = AudioManager()
 
     override func didMove(to view: SKView) {
-        backgroundColor = .gray
+        backgroundColor = .black
         
         // Instantiate or re-instantiate UI elements and scripts
         let textNode = TextNode(fontSize: 16, maxLines: 10, padding: 12)
@@ -38,6 +38,10 @@ class NovelScene: SKScene, ObservableObject {
     
     func toggleHistoryOverlay() {
         historyOverlay.isHidden.toggle()
+    }
+    
+    func toggleSkip() {
+        executor?.skip.toggle()
     }
 }
 

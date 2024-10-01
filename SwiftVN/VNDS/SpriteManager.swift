@@ -58,17 +58,6 @@ class SpriteManager {
                 newWidth = newHeight * imageAspectRatio
             }
             
-            // Stretch the image if smaller, up to the screen bounds
-            if newWidth < scene.size.width {
-                newWidth = scene.size.width
-                newHeight = newWidth / imageAspectRatio
-            }
-            
-            if newHeight < scene.size.height {
-                newHeight = scene.size.height
-                newWidth = newHeight * imageAspectRatio
-            }
-            
             backgroundNode.size = CGSize(width: newWidth, height: newHeight)
             
             // Center the background
@@ -93,41 +82,58 @@ class SpriteManager {
     
     private func addImage(named name: String, position: CGPoint) {
         foregroundArchive.extractImage(named: "foreground/\(name)") { image in
-            if image == nil {
+            guard let image = image else {
                 fatalError("Could not load foreground image for \(name)")
             }
             
-            let texture = SKTexture(image: image!)
-
-            // Get screen size
-            let screenWidth = UIScreen.main.bounds.width
-            let screenHeight = UIScreen.main.bounds.height
+            let texture = SKTexture(image: image)
+            let foregroundImageNode = SKSpriteNode(texture: texture)
             
-            // Original image dimensions
-            let originalWidth = texture.size().width
-            let originalHeight = texture.size().height
+            let scene = self.scene
             
-            // Calculate size scale for the image
-            let sx = screenWidth / originalWidth
-            let sy = screenHeight / originalHeight
-            let scale = min(sx, sy) // Keep aspect ratio
+            // Calculate the original and new sizes
+            let imageAspectRatio = texture.size().width / texture.size().height
+            let screenAspectRatio = scene.size.width / scene.size.height
             
-            // Calculate position scaling
-            let px = screenWidth / originalWidth
-            let py = screenHeight / originalHeight
-            let pscale = min(px, py)
+            var newWidth: CGFloat
+            var newHeight: CGFloat
             
-            // Calculate an offset so that the bottom-left corner is at the specified position
-            let offsetX = screenWidth / 2 - (originalWidth * scale) / 2
-            let offsetY = screenHeight / 2 - (originalHeight * scale) / 2
-
-            let spriteNode = SKSpriteNode(texture: texture)
+            // Fit the image within the screen bounds, scaling up if necessary while maintaining aspect ratio
+            if imageAspectRatio > screenAspectRatio {
+                // Image is wider relative to the screen, fit to width
+                newWidth = scene.size.width
+                newHeight = newWidth / imageAspectRatio
+            } else {
+                // Image is taller relative to the screen, fit to height
+                newHeight = scene.size.height
+                newWidth = newHeight * imageAspectRatio
+            }
             
-            spriteNode.position = CGPoint(x: position.x * pscale + offsetX, y: position.y * pscale + offsetY)
-            spriteNode.setScale(scale)
-
-            self.imageNodes.append(spriteNode)
-            self.contentNode.addChild(spriteNode)
+            // Stretch the image if it's smaller, up to the screen bounds
+            if newWidth < scene.size.width {
+                newWidth = scene.size.width
+                newHeight = newWidth / imageAspectRatio
+            }
+            
+            if newHeight < scene.size.height {
+                newHeight = scene.size.height
+                newWidth = newHeight * imageAspectRatio
+            }
+            
+            // Calculate the position offset
+            let offsetX = (scene.size.width - newWidth) / 2
+            let offsetY = (scene.size.height - newHeight) / 2
+            
+            // Update the node size and position
+            foregroundImageNode.size = CGSize(width: newWidth, height: newHeight)
+            foregroundImageNode.position = CGPoint(x: scene.size.width / 2 + offsetX, y: scene.size.height / 2 + offsetY)
+            
+            // Set the anchor point to the center
+            foregroundImageNode.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+            
+            // Add the app image node to the contentNode
+            self.imageNodes.append(foregroundImageNode)
+            self.contentNode.addChild(foregroundImageNode)
         }
     }
     

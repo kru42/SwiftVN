@@ -18,6 +18,8 @@ class ScriptExecutor: ObservableObject {
     @Published var isWaitingForInput: Bool = true
     @Published var isLoadingMusic: Bool = false
     
+    var skip = false
+    
     private let scene: NovelScene
     private let archiveManager: ArchiveManager = ArchiveManager(zipFileName: "script.zip")
     private let logger = LoggerFactory.shared
@@ -72,8 +74,8 @@ class ScriptExecutor: ObservableObject {
             
             let components = line.components(separatedBy: " ")
             
-            logger.debug("Executing command \(components[0])")
-            
+            logger.debug("Executing command \(line)")
+
             switch components[0] {
             case "text":
                 executeText(components)

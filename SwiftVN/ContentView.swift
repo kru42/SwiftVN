@@ -59,6 +59,13 @@ struct ContentView: View {
                             .foregroundStyle(.white)
                             .cornerRadius(10) // FIXME: deprecated
                     }
+                    Button(action: {
+                        scene?.toggleSkip()
+                    }) {
+                        Image(systemName: "forward.fill")
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 5)
+                    }
                 }
                 .background(Color.black.opacity(0.5))
                 
