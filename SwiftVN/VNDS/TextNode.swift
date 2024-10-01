@@ -13,7 +13,7 @@ class TextNode: SKNode {
     private let maxLines: Int
     private let padding: CGFloat
     private let fontSize: CGFloat
-    private var textFont: UIFont
+    var textFont: UIFont
     
     private var background: SKShapeNode?
     private var labelNodes: [SKLabelNode] = []

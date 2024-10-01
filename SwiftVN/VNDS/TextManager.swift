@@ -10,7 +10,7 @@ import SpriteKit
 class TextManager {
     private let scene: SKScene
     
-    var textNode: TextNode
+    private var textNode: TextNode
     private let uiNode = SKNode()
     
     init(scene: SKScene, textNode: TextNode = TextNode(fontSize: 16, maxLines: 10, padding: 12)) {
@@ -33,5 +33,13 @@ class TextManager {
     
     func clearText() {
         textNode.clearText()
+    }
+    
+    func skipAnimation() {
+        textNode.skipAnimation()
+    }
+    
+    func getFontName() -> String {
+        return textNode.textFont.fontName
     }
 }

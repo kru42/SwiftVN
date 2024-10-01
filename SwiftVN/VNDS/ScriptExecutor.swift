@@ -8,6 +8,7 @@
 //
 // TODO
 // - Interpolate in most instructions, even choices?
+// - Assignments and comparisons should work with variables both ways, not just "variable == literal"
 //
 
 import SwiftUI
@@ -20,11 +21,10 @@ class ScriptExecutor: ObservableObject {
     private var globalVariables: [String: Any] = [:]
     private var labels: [String: Int] = [:]
     
+    @Published var isSkipping = false
     @Published var isLoadingMusic = false
     @Published var isWaitingForInput = true
     @Published var isWaitingForChoice = false
-    
-    var skip = false
     
     private let scene: NovelScene
     private let archiveManager: ArchiveManager = ArchiveManager(zipFileName: "script.zip")
@@ -34,6 +34,13 @@ class ScriptExecutor: ObservableObject {
     init(scene: NovelScene) {
         self.scene = scene
         self.choiceManager = ChoiceManager(scene: scene)
+    }
+    
+    func toggleSkip() {
+        isSkipping.toggle()
+        if isSkipping {
+            next()
+        }
     }
     
     func loadScript(named scriptName: String) {
@@ -67,12 +74,12 @@ class ScriptExecutor: ObservableObject {
             return
         }
         
-        if isWaitingForInput {
+        if isWaitingForInput || isSkipping {
             isWaitingForInput = false
             currentLine += 1
             executeUntilStopped()
         } else {
-            scene.textManager?.textNode.skipAnimation()
+            scene.textManager?.skipAnimation()
             isWaitingForInput = true
         }
     }
@@ -92,14 +99,16 @@ class ScriptExecutor: ObservableObject {
             switch components[0] {
             case "text":
                 executeText(components)
-                return
+                if !isSkipping {
+                    return
+                }
             case "cleartext":
                 // Simulate `text ~`
                 executeText(["text", "~"])
                 return
             case "choice":
+                // Stop at choices, even if skipping
                 executeChoice(components)
-                currentLine += 1
                 return
             case "bgload":
                 executeBgLoad(components)
@@ -134,6 +143,11 @@ class ScriptExecutor: ObservableObject {
             }
             
             currentLine += 1
+            
+            if isSkipping {
+                // Don't freeze the UI
+                Thread.sleep(forTimeInterval: 0.5)
+            }
         }
     }
     
@@ -146,7 +160,10 @@ class ScriptExecutor: ObservableObject {
     }
     
     private func executeBgLoad(_ components: [String]) {
-        scene.textManager?.textNode.clearText()
+        // Clear text
+        scene.textManager?.clearText()
+        
+        // This also clears images
         scene.spriteManager?.setBackground(path: components[1], withAnimationFrames: 60)
     }
     
@@ -192,38 +209,66 @@ class ScriptExecutor: ObservableObject {
         }
         
         if interpolatedText.starts(with: "@") {
-            textManager.setText(String(interpolatedText.dropFirst())) { [weak self] in
-                guard let self = self else { return }
-                self.scene.historyOverlay.addHistoryLine(String(interpolatedText.dropFirst()))
-                self.currentLine += 1
-                self.executeUntilStopped()
-            }
-            
-            return
-        }
-
-        textManager.setText(interpolatedText) { [weak self] in
-            guard let self = self else { return }
-            if interpolatedText == "~" {
+            let processedText = String(interpolatedText.dropFirst())
+            if isSkipping {
+                textManager.setText(processedText) {
+                    textManager.skipAnimation() // FIXME: This is expensive, find a better approach
+                }
+                
+                self.scene.historyOverlay.addHistoryLine(processedText)
                 self.currentLine += 1
                 self.executeUntilStopped()
             } else {
+                textManager.setText(processedText) { [weak self] in
+                    guard let self = self else { return }
+                    self.scene.historyOverlay.addHistoryLine(processedText)
+                    self.currentLine += 1
+                    self.executeUntilStopped()
+                }
+            }
+            return
+        }
+        
+        if isSkipping {
+            textManager.setText(interpolatedText) {
+                textManager.skipAnimation()
+            }
+            
+            if interpolatedText != "~" {
                 self.scene.historyOverlay.addHistoryLine(interpolatedText)
-                self.isWaitingForInput = true
+            }
+            self.currentLine += 1
+            self.executeUntilStopped()
+        } else {
+            textManager.setText(interpolatedText) { [weak self] in
+                guard let self = self else { return }
+                if interpolatedText == "~" {
+                    self.currentLine += 1
+                    self.executeUntilStopped()
+                } else {
+                    self.scene.historyOverlay.addHistoryLine(interpolatedText)
+                    self.isWaitingForInput = true
+                }
             }
         }
     }
     
     private func interpolateText(_ text: String) -> String {
         var result = text
-        let pattern = #"\{([^}]+)\}"#
+        let pattern = #"\{(\$[^}]+)\}"# // {$var}
         let regex = try! NSRegularExpression(pattern: pattern)
         let matches = regex.matches(in: text, range: NSRange(text.startIndex..., in: text))
         
         for match in matches.reversed() {
-            let variableName = (text as NSString).substring(with: match.range(at: 1))
-            if let value = variables[variableName] ?? globalVariables[variableName] {
-                result = (result as NSString).replacingCharacters(in: match.range, with: "\(value)")
+            let fullRange = match.range
+            let variableRange = match.range(at: 1)
+            let variableName = (text as NSString).substring(with: variableRange)
+            let strippedVariableName = String(variableName.dropFirst()) // Remove the '$' prefix
+            
+            if let value = variables[strippedVariableName] ?? globalVariables[strippedVariableName] {
+                result = (result as NSString).replacingCharacters(in: fullRange, with: "\(value)")
+            } else {
+                logger.warning("Unknown variable \(strippedVariableName). Keeping original placeholder.")
             }
         }
         
@@ -235,8 +280,11 @@ class ScriptExecutor: ObservableObject {
         
         choiceManager.presentChoices(choices) { [weak self] selectedIndex in
             guard let self = self else { return }
-            self.globalVariables["selected"] = selectedIndex
+            self.variables["selected"] = selectedIndex
             self.isWaitingForChoice = false
+            
+            choiceManager.clearChoices()
+            
             self.currentLine += 1
             self.executeUntilStopped()
         }
@@ -255,6 +303,7 @@ class ScriptExecutor: ObservableObject {
         next()
     }
     
+    // TODO: Check any edge-case coverage in novels
     private func executeSetVar(_ components: [String], isGlobal: Bool) {
         guard components.count >= 4 else { return }
         let varName = components[1]
@@ -263,15 +312,23 @@ class ScriptExecutor: ObservableObject {
         
         var targetVariables = isGlobal ? globalVariables : variables
         
+        // Determine if the value is actually a variable label
+        let effectiveValue: String
+        if let variableValue = targetVariables[value] {
+            effectiveValue = String(describing: variableValue)
+        } else {
+            effectiveValue = value
+        }
+        
         switch operation {
         case "=":
-            targetVariables[varName] = value
+            targetVariables[varName] = effectiveValue
         case "+":
-            if let currentValue = targetVariables[varName] as? Int, let addValue = Int(value) {
+            if let currentValue = targetVariables[varName] as? Int, let addValue = Int(effectiveValue) {
                 targetVariables[varName] = currentValue + addValue
             }
         case "-":
-            if let currentValue = targetVariables[varName] as? Int, let subtractValue = Int(value) {
+            if let currentValue = targetVariables[varName] as? Int, let subtractValue = Int(effectiveValue) {
                 targetVariables[varName] = currentValue - subtractValue
             }
         default:
@@ -359,11 +416,22 @@ class ScriptExecutor: ObservableObject {
     }
     
     private func executeDelay(_ components: [String]) {
-        guard components.count >= 2, let frames = Int(components[1]) else { return }
-        let seconds = Double(frames) / 60.0
-        // Stub: Implement actual delay
-        unistd.usleep(UInt32(seconds * 1_000_000))
-        print("Delaying for \(seconds) seconds")
+        guard components.count >= 2, let frames = Int(components[1]) else {
+            print("Invalid delay command. Usage: delay <frames>")
+            return
+        }
+        
+        let seconds = Double(frames) / Double(scene.view?.preferredFramesPerSecond ?? 60)
+        let nanoseconds = UInt64(seconds * 1_000_000_000)
+        
+        print("Delaying for \(seconds) seconds (\(frames) frames)")
+        
+        DispatchQueue.global().asyncAfter(deadline: .now() + .nanoseconds(Int(nanoseconds))) {
+            print("Delay completed")
+        }
+        
+        // Wait for the delay to complete (blocking)
+        Thread.sleep(forTimeInterval: seconds)
     }
     
     private func executeRandom(_ components: [String]) {

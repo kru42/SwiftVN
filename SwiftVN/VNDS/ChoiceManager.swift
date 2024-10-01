@@ -25,13 +25,14 @@ class ChoiceManager {
         choiceContainer.name = "choiceContainer"
         
         for (index, option) in options.enumerated() {
-            let button = SKSpriteNode(color: .black.withAlphaComponent(0.8), size: CGSize(width: 200, height: 50))
+            let button = SKSpriteNode(color: .black.withAlphaComponent(0.8), size: CGSize(width: 400, height: 50))
             button.position = CGPoint(x: 0, y: -CGFloat(index * 60))
             button.name = "choice_\(index)"
             
             let label = SKLabelNode(text: option)
             label.fontColor = .white
             label.fontName = "HelveticaNeue-Light"
+            label.fontSize = 18
             label.verticalAlignmentMode = .center
             button.addChild(label)
             

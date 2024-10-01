@@ -30,6 +30,9 @@ class SpriteManager {
     }
     
     func setBackground(path: String, withAnimationFrames frames: Double?) {
+        // Clear images before drawing new background
+        clearImages()
+        
         backgroundArchive.extractImage(named: "background/\(path)") { image in
             if image == nil {
                 fatalError("Could not load background image for \(path)")

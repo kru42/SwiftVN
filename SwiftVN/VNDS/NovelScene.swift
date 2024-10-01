@@ -48,7 +48,7 @@ class NovelScene: SKScene, ObservableObject {
     }
     
     func toggleSkip() {
-        executor?.skip.toggle()
+        executor?.toggleSkip()
     }
 }
 
