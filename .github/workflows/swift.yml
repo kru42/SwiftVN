@@ -37,7 +37,7 @@ jobs:
     - name: Package ipa
       run: |
         mkdir payload
-        cp -r build/SwiftVN.xcarchive/Products/Applications/Aidoku.app payload
+        cp -r build/SwiftVN.xcarchive/Products/Applications/SwiftVN.app payload
         zip -r SwiftVN-${{ steps.commitinfo.outputs.sha_short }}.ipa payload
           
     - name: Upload artifacts
