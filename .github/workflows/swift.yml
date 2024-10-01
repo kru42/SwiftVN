@@ -23,11 +23,7 @@ jobs:
         xcode-version: latest-stable
         
     - name: Build
-      run: |
-        cd SwiftVN
-        xcodebuild build -project SwiftVN.xcodeproj -scheme SwiftVN clean build -sdk iphoneos CODE_SIGNING_ALLOWED=No
+      run: xcodebuild build -project SwiftVN.xcodeproj -scheme SwiftVN clean build -sdk iphoneos CODE_SIGNING_ALLOWED=No
       
     - name: Run tests
-      run: |
-        cd SwiftVN
-        xcodebuild test -project SwiftVN.xcodeproj -scheme SwiftVN clean build -sdk iphoneos -destination "platform=iOS Simulator,OS=17.0,name=iPhone 13" CODE_SIGNING_ALLOWED=No
+      run: xcodebuild test -project SwiftVN.xcodeproj -scheme SwiftVN clean build -sdk iphoneos -destination "platform=iOS Simulator,OS=17.0,name=iPhone 13" CODE_SIGNING_ALLOWED=No
