@@ -92,7 +92,7 @@ class SpriteManager {
     }
     
     private func addImage(named name: String, position: CGPoint) {
-        foregroundArchive.extractImage(named: "foreground\(name)") { image in
+        foregroundArchive.extractImage(named: "foreground/\(name)") { image in
             if image == nil {
                 fatalError("Could not load foreground image for \(name)")
             }

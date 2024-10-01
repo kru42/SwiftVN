@@ -46,6 +46,8 @@ class HistoryOverlayNode: SKNode {
         maskNode.position = CGPoint(x: (size.width - padding * 2) / 2, y: (size.height - padding * 2) / 2)
         
         scrollNode.position = CGPoint(x: 0, y: size.height - padding * 2)
+        
+        self.zPosition = 2
     }
     
     required init?(coder aDecoder: NSCoder) {

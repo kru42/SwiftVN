@@ -113,49 +113,41 @@ class TextNode: SKNode {
     }
     
     private func drawText() {
-        let lineHeight = textFont.lineHeight + padding
+        let lineHeight = textFont.lineHeight
         let width = UIScreen.main.bounds.width - 2 * padding
         var wrappedLines: [String] = []
         
-        // NOTE: Text lines that may contain Japanese characters
+        // Wrap text into lines
         var currentLine = ""
-        
         for character in Array(currentTextLine) {
             let testLine = currentLine.isEmpty ? String(character) : "\(currentLine)\(character)"
             let testLineSize = (testLine as NSString).size(withAttributes: [NSAttributedString.Key.font: textFont])
             
-            // If adding the character following the current character exceeds the width, start a new line
-            if testLineSize.width + fontSize > width {
+            if testLineSize.width > width - 2 * padding {
                 wrappedLines.append(currentLine)
-                currentLine = String(character) // Start a new line with the current character
+                currentLine = String(character)
             } else {
-                currentLine = testLine // Continue building the current line
+                currentLine = testLine
             }
         }
-        
-        // Add any remaining text in currentLine to wrappedLines
         if !currentLine.isEmpty {
             wrappedLines.append(currentLine)
         }
         
-        // Clear existing children before drawing if needed
-        removeAllChildren()
+        // Calculate total height and create background
+        let totalHeight = CGFloat(wrappedLines.count) * lineHeight + 2 * padding
+        let cornerRadius: CGFloat = 8.0
+        let backgroundRect = CGRect(x: 0, y: 0, width: width, height: totalHeight)
+        let backgroundPath = UIBezierPath(roundedRect: backgroundRect, cornerRadius: cornerRadius)
         
-        // Draw the wrapped lines
-        let totalHeight = CGFloat(wrappedLines.count) * lineHeight + padding
-        
-        // Create a rounded rectangle
-        let cornerRadius: CGFloat = 5.0
-        let backgroundPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: width, height: totalHeight), cornerRadius: cornerRadius)
-        
-        // TODO: Don't redraw
         let background = SKShapeNode(path: backgroundPath.cgPath)
-        background.fillColor = UIColor(red: 0.18, green: 0.204, blue: 0.251, alpha: 0.8)
+        background.fillColor = UIColor(red: 0.05, green: 0.05, blue: 0.05, alpha: 0.8)
         background.strokeColor = .clear
         addChild(background)
         
-        // FIXME: Workaround, idk why the text has an offset
-        let verticalOffset: CGFloat = 20
+        // Create and position text labels
+        let centerY = totalHeight / 2
+        let startY = centerY + (CGFloat(wrappedLines.count - 1) / 2) * lineHeight
         
         for (index, line) in wrappedLines.enumerated() {
             let label = SKLabelNode(fontNamed: textFont.fontName)
@@ -163,12 +155,16 @@ class TextNode: SKNode {
             label.fontSize = fontSize
             label.fontColor = .white
             label.horizontalAlignmentMode = .left
-            label.verticalAlignmentMode = .top
-            label.position = CGPoint(x: padding, y: totalHeight - CGFloat(index + 1) * lineHeight + verticalOffset)
+            label.verticalAlignmentMode = .center
+            
+            let labelY = startY - CGFloat(index) * lineHeight
+            label.position = CGPoint(x: padding, y: labelY)
+            
             addChild(label)
         }
         
-        // Position the node at the bottom of the screen
+        // Position the entire node at the bottom center of the screen
         position = CGPoint(x: padding, y: padding)
     }
 }
+
