@@ -47,7 +47,7 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: SwiftVN${{ steps.commitinfo.outputs.sha_short }}.ipa
+        name: SwiftVN-${{ steps.commitinfo.outputs.sha_short }}.ipa
         path: SwiftVN-${{ steps.commitinfo.outputs.sha_short }}.ipa
         if-no-files-found: error
       
