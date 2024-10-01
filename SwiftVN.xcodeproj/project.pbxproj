@@ -22,6 +22,7 @@
 		7859C39C2CA849C200051A60 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 7859C39B2CA849C200051A60 /* ZIPFoundation */; };
 		785C03A32CAB556400C27C66 /* HistoryOverlayNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C03A22CAB556000C27C66 /* HistoryOverlayNode.swift */; };
 		785C03A52CABE07800C27C66 /* sazanami-gothic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 785C03A42CABE07800C27C66 /* sazanami-gothic.ttf */; };
+		785C03A72CAC102600C27C66 /* ChoiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C03A62CAC102500C27C66 /* ChoiceManager.swift */; };
 		788EC63B2CA848F1006A3562 /* ArchiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788EC63A2CA848EF006A3562 /* ArchiveManager.swift */; };
 		788FBCEF2CA92DCD00B976A9 /* TextNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788FBCEE2CA92DCA00B976A9 /* TextNode.swift */; };
 		78918ACB2CA8C28900632961 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78918AC72CA8C28900632961 /* AudioManager.swift */; };
@@ -79,6 +80,7 @@
 		7824DE3B2CA819E0003383A7 /* SwiftVN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftVN.swift; sourceTree = "<group>"; };
 		785C03A22CAB556000C27C66 /* HistoryOverlayNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryOverlayNode.swift; sourceTree = "<group>"; };
 		785C03A42CABE07800C27C66 /* sazanami-gothic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "sazanami-gothic.ttf"; sourceTree = "<group>"; };
+		785C03A62CAC102500C27C66 /* ChoiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoiceManager.swift; sourceTree = "<group>"; };
 		787942252CA99B4200C50CC1 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
 		787942262CA99B4700C50CC1 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		787942272CA9A3FA00C50CC1 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 		78918ACA2CA8C28900632961 /* VNDS */ = {
 			isa = PBXGroup;
 			children = (
+				785C03A62CAC102500C27C66 /* ChoiceManager.swift */,
 				78918AC72CA8C28900632961 /* AudioManager.swift */,
 				785C03A22CAB556000C27C66 /* HistoryOverlayNode.swift */,
 				78918ACE2CA8C29200632961 /* NovelScene.swift */,
@@ -371,6 +374,7 @@
 				781741612CA89C9400D0B3B9 /* LoggerFactory.swift in Sources */,
 				78918ACB2CA8C28900632961 /* AudioManager.swift in Sources */,
 				78BA5B9E2CAA73E600EBDE6B /* TextManager.swift in Sources */,
+				785C03A72CAC102600C27C66 /* ChoiceManager.swift in Sources */,
 				78918ACD2CA8C28900632961 /* ScriptExecutor.swift in Sources */,
 				7824DE3C2CA819E9003383A7 /* SwiftVN.swift in Sources */,
 			);

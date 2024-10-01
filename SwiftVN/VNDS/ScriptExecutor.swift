@@ -5,6 +5,11 @@
 //  Created by Kru on 29/09/24.
 //
 
+//
+// TODO
+// - Interpolate in most instructions, even choices?
+//
+
 import SwiftUI
 import SpriteKit
 
@@ -15,17 +20,20 @@ class ScriptExecutor: ObservableObject {
     private var globalVariables: [String: Any] = [:]
     private var labels: [String: Int] = [:]
     
-    @Published var isWaitingForInput: Bool = true
-    @Published var isLoadingMusic: Bool = false
+    @Published var isLoadingMusic = false
+    @Published var isWaitingForInput = true
+    @Published var isWaitingForChoice = false
     
     var skip = false
     
     private let scene: NovelScene
     private let archiveManager: ArchiveManager = ArchiveManager(zipFileName: "script.zip")
+    private let choiceManager: ChoiceManager
     private let logger = LoggerFactory.shared
     
     init(scene: NovelScene) {
         self.scene = scene
+        self.choiceManager = ChoiceManager(scene: scene)
     }
     
     func loadScript(named scriptName: String) {
@@ -54,6 +62,11 @@ class ScriptExecutor: ObservableObject {
     }
     
     func next() {
+        if isWaitingForChoice {
+            // Do nothing, wait for choice selection
+            return
+        }
+        
         if isWaitingForInput {
             isWaitingForInput = false
             currentLine += 1
@@ -79,6 +92,10 @@ class ScriptExecutor: ObservableObject {
             switch components[0] {
             case "text":
                 executeText(components)
+                return
+            case "cleartext":
+                // Simulate `text ~`
+                executeText(["text", "~"])
                 return
             case "choice":
                 executeChoice(components)
@@ -152,9 +169,9 @@ class ScriptExecutor: ObservableObject {
         if components[1] == "~" {
             scene.audioManager.clearMusic()
         } else {
-            self.isLoadingMusic = true
+            //self.isLoadingMusic = true
             scene.audioManager.playMusic(songPath: components[1]) {
-                self.isLoadingMusic = false
+                //self.isLoadingMusic = false
             }
         }
     }
@@ -214,10 +231,28 @@ class ScriptExecutor: ObservableObject {
     }
     
     private func executeChoice(_ components: [String]) {
-        // Get components separated by "|"
-        // TODO: do
         let choices = components.dropFirst().joined(separator: " ").components(separatedBy: "|")
-        variables["selected"] = 1 // Will be updated when user makes a choice
+        
+        choiceManager.presentChoices(choices) { [weak self] selectedIndex in
+            guard let self = self else { return }
+            self.globalVariables["selected"] = selectedIndex
+            self.isWaitingForChoice = false
+            self.currentLine += 1
+            self.executeUntilStopped()
+        }
+        
+        isWaitingForChoice = true
+    }
+    
+    func handleTap(at position: CGPoint) {
+        if isWaitingForChoice && choiceManager.hasActiveChoices {
+            let choiceHandled = choiceManager.handleTap(at: position)
+            if choiceHandled {
+                isWaitingForChoice = false
+                return
+            }
+        }
+        next()
     }
     
     private func executeSetVar(_ components: [String], isGlobal: Bool) {
@@ -252,29 +287,27 @@ class ScriptExecutor: ObservableObject {
     
     private func executeIf(_ components: [String]) {
         guard components.count >= 4 else { return }
+        
         let varName = components[1]
         let operation = components[2]
-        let value = components[3]
+        let comparisonValue = components[3]
         
-        let variableValue = (variables[varName] ?? globalVariables[varName]) as? String ?? ""
+        guard let variableValue = variables[varName] ?? globalVariables[varName] else {
+            logger.error("Variable \(varName) not found")
+            fatalError()
+        }
         
         let condition: Bool
-        switch operation {
-        case "==":
-            condition = variableValue == value
-        case "!=":
-            condition = variableValue != value
-        case ">":
-            condition = (Int(variableValue) ?? 0) > (Int(value) ?? 0)
-        case "<":
-            condition = (Int(variableValue) ?? 0) < (Int(value) ?? 0)
-        case ">=":
-            condition = (Int(variableValue) ?? 0) >= (Int(value) ?? 0)
-        case "<=":
-            condition = (Int(variableValue) ?? 0) <= (Int(value) ?? 0)
-        default:
-            print("Unknown operation: \(operation)")
-            condition = false
+        if let intVariableValue = variableValue as? Int, let intComparisonValue = Int(comparisonValue) {
+            // Compare as integers if both are Ints
+            condition = evaluateCondition(intVariableValue, operation: operation, value: intComparisonValue)
+        } else if let strVariableValue = variableValue as? String {
+            // Compare as strings if the variable is a String
+            condition = evaluateCondition(strVariableValue, operation: operation, value: comparisonValue)
+        } else {
+            // Handle unsupported types
+            logger.error("Unsupported variable type for \(varName)")
+            fatalError()
         }
         
         if !condition {
@@ -295,9 +328,29 @@ class ScriptExecutor: ObservableObject {
         }
     }
     
+    private func evaluateCondition<T: Comparable>(_ variableValue: T, operation: String, value: T) -> Bool {
+        switch operation {
+        case "==":
+            return variableValue == value
+        case "!=":
+            return variableValue != value
+        case ">":
+            return variableValue > value
+        case "<":
+            return variableValue < value
+        case ">=":
+            return variableValue >= value
+        case "<=":
+            return variableValue <= value
+        default:
+            logger.error("Unknown operation: \(operation)")
+            return false
+        }
+    }
+    
     private func executeJump(_ components: [String]) {
         guard components.count >= 2 else { return }
-        let scriptName = components[1]
+        let scriptName = interpolateText(components[1])
         loadScript(named: scriptName)
         currentLine = 0
         

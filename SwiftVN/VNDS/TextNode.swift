@@ -21,14 +21,20 @@ class TextNode: SKNode {
     var isAnimating: Bool = false
     var isAnimationComplete: Bool = true
     
+    private let logger = LoggerFactory.shared
+    
     init(fontSize: CGFloat = 16, maxLines: Int = 3, padding: CGFloat = 20) {
         self.fontSize = fontSize
         self.maxLines = maxLines
         self.padding = padding
         
-        // let fontURL = SwiftVN.baseDirectory.appendingPathComponent("default.ttf")
-        let fontURL = Bundle.main.bundleURL.appendingPathComponent("sazanami-gothic.ttf")
-
+        logger.info("Loading font...")
+        var fontURL = SwiftVN.baseDirectory.appendingPathComponent("default.ttf")
+        if !FileManager.default.fileExists(atPath: fontURL.path) {
+            logger.info("Falling back to sazanami-gothic.ttf")
+            fontURL = Bundle.main.bundleURL.appendingPathComponent("sazanami-gothic.ttf")
+        }
+        
         // Load novel custom font
         if let fontDataProvider = CGDataProvider(url: fontURL as CFURL),
            let font = CGFont(fontDataProvider) {

@@ -30,6 +30,13 @@ class NovelScene: SKScene, ObservableObject {
         
         executor = ScriptExecutor(scene: self)
         executor?.loadScript(named: "main.scr")
+        
+        // Start the script
+        executor?.next()
+    }
+    
+    func handleTap(at location: CGPoint) {
+        executor?.handleTap(at: location)
     }
     
     func next() {

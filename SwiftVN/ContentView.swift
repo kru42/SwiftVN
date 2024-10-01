@@ -24,11 +24,12 @@ struct ContentView: View {
             if let scene = scene {
                 SpriteView(scene: scene)
                     .ignoresSafeArea()
-                    .onTapGesture {
-                        if (!showHistoryOverlay) {
-                            scene.next()
-                        }
-                    }
+                    .gesture(
+                        DragGesture(minimumDistance: 0)
+                            .onEnded { value in
+                                scene.handleTap(at: value.location)
+                            }
+                    )
             }
             
             // Overlay for title and FPS
