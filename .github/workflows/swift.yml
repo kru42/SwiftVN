@@ -16,6 +16,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Install Carthage
+      run: brew install carthage
+
+    - name: Bootstrap Carthage
+      run: carthage bootstrap --platform iOS
     
     - name: Xcode
       uses: maxim-lobanov/setup-xcode@v1
