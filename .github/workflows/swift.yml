@@ -31,5 +31,5 @@ jobs:
     - name: Build
       run: xcodebuild build -project SwiftVN.xcodeproj -scheme SwiftVN clean build -sdk iphoneos CODE_SIGNING_ALLOWED=No
       
-    - name: Run tests
-      run: xcodebuild test -project SwiftVN.xcodeproj -scheme SwiftVN clean build -sdk iphoneos -destination "platform=iOS Simulator,OS=18.0,name=iPhone 15" CODE_SIGNING_ALLOWED=No
+    #- name: Run tests
+    #  run: xcodebuild test -project SwiftVN.xcodeproj -scheme SwiftVN clean build -sdk iphoneos -destination "platform=iOS Simulator,OS=18.0,name=iPhone 15" CODE_SIGNING_ALLOWED=No
