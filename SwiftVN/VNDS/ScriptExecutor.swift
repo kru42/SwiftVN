@@ -26,6 +26,9 @@ class ScriptExecutor: ObservableObject {
     @Published var isWaitingForInput = true
     @Published var isWaitingForChoice = false
     
+    // Indicates whether we canceled skipping
+    private var isCanceled: Bool = false
+    
     private let scene: NovelScene
     private let archiveManager: ArchiveManager = ArchiveManager(zipFileName: "script.zip")
     private let choiceManager: ChoiceManager
@@ -39,7 +42,10 @@ class ScriptExecutor: ObservableObject {
     func toggleSkip() {
         isSkipping.toggle()
         if isSkipping {
-            next()
+            isCanceled = false
+            executeUntilStopped()
+        } else {
+            isCanceled = true
         }
     }
     
@@ -85,7 +91,7 @@ class ScriptExecutor: ObservableObject {
     }
     
     func executeUntilStopped() {
-        while currentLine < script.count {
+        while currentLine < script.count && !isCanceled {
             let line = script[currentLine - 1].trimmingCharacters(in: .whitespaces)
             if line.isEmpty {
                 currentLine += 1
@@ -146,6 +152,7 @@ class ScriptExecutor: ObservableObject {
             
             if isSkipping {
                 // FIXME: Don't freeze the UI (it freezes anyway lol)
+                // FIXME: OH GOD JUST IMPLEMENT SKIPPING PROPERLY ALREADY, why isnt everything just single-thread ;-;
                 Thread.sleep(forTimeInterval: 0.05)
             }
         }
@@ -208,10 +215,11 @@ class ScriptExecutor: ObservableObject {
             return
         }
         
+        // TODO: This is really supposed to be wrapped... implement text wrapping with a function param
         if interpolatedText.starts(with: "@") {
             let processedText = String(interpolatedText.dropFirst())
             if isSkipping {
-                textManager.setText(processedText, animated: false, wrap: true)
+                textManager.setText(processedText, animated: false)
                 
                 self.scene.historyOverlay.addHistoryLine(processedText)
                 self.currentLine += 1
