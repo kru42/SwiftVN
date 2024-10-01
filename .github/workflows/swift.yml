@@ -30,6 +30,21 @@ jobs:
         
     - name: Build
       run: xcodebuild build -project SwiftVN.xcodeproj -scheme SwiftVN clean build -sdk iphoneos CODE_SIGNING_ALLOWED=No
-      
+
     #- name: Run tests
     #  run: xcodebuild test -project SwiftVN.xcodeproj -scheme SwiftVN clean build -sdk iphoneos -destination "platform=iOS Simulator,OS=18.0,name=iPhone 15" CODE_SIGNING_ALLOWED=No
+
+    - name: Package ipa
+      run: |
+        mkdir payload
+        cp -r build/SwiftVN.xcarchive/Products/Applications/Aidoku.app payload
+        zip -r SwiftVN-${{ steps.commitinfo.outputs.sha_short }}.ipa payload
+          
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: SwiftVN${{ steps.commitinfo.outputs.sha_short }}.ipa
+        path: SwiftVN-${{ steps.commitinfo.outputs.sha_short }}.ipa
+        if-no-files-found: error
+      
+    
