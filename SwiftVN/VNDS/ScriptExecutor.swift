@@ -145,8 +145,8 @@ class ScriptExecutor: ObservableObject {
             currentLine += 1
             
             if isSkipping {
-                // Don't freeze the UI
-                Thread.sleep(forTimeInterval: 0.5)
+                // FIXME: Don't freeze the UI (it freezes anyway lol)
+                Thread.sleep(forTimeInterval: 0.05)
             }
         }
     }
@@ -211,9 +211,7 @@ class ScriptExecutor: ObservableObject {
         if interpolatedText.starts(with: "@") {
             let processedText = String(interpolatedText.dropFirst())
             if isSkipping {
-                textManager.setText(processedText) {
-                    textManager.skipAnimation() // FIXME: This is expensive, find a better approach
-                }
+                textManager.setText(processedText, animated: false, wrap: true)
                 
                 self.scene.historyOverlay.addHistoryLine(processedText)
                 self.currentLine += 1
@@ -230,9 +228,7 @@ class ScriptExecutor: ObservableObject {
         }
         
         if isSkipping {
-            textManager.setText(interpolatedText) {
-                textManager.skipAnimation()
-            }
+            textManager.setText(interpolatedText, animated: false)
             
             if interpolatedText != "~" {
                 self.scene.historyOverlay.addHistoryLine(interpolatedText)

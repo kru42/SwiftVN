@@ -43,7 +43,9 @@ struct ContentView: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 5)
+                    
                     Spacer()
+                    
                     TimelineView(.animation) { timeline in
                         let _ = DispatchQueue.main.async {
                             fpsCounter.update(date: timeline.date)
@@ -55,6 +57,7 @@ struct ContentView: View {
                             .padding(.horizontal, 10)
                             .padding(.vertical, 5)
                     }
+                    
                     Button(action: {
                         showHistoryOverlay.toggle()
                         scene?.toggleHistoryOverlay()
@@ -63,6 +66,7 @@ struct ContentView: View {
                             .foregroundStyle(.white)
                             .cornerRadius(10) // FIXME: deprecated
                     }
+                    
                     Button(action: {
                         scene?.toggleSkip()
                     }) {

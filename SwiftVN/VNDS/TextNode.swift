@@ -11,6 +11,8 @@ class TextNode: SKNode {
     private var textString: String = ""
     private var currentTextLine: String = ""
     private let maxLines: Int
+    private var lines: [String] = []
+    private var maxWidth: CGFloat = 0
     private let padding: CGFloat
     private let fontSize: CGFloat
     var textFont: UIFont
@@ -51,7 +53,15 @@ class TextNode: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func addTextWithAnimation(_ line: String, delay: TimeInterval = 0.05, completion: @escaping () -> Void) {
+    func setCurrentLine(_ line: String, wrap: Bool = false) {
+        currentTextLine = line
+        
+        if wrap {
+            
+        }
+    }
+    
+    func addTextWithAnimation(_ line: String, wrap: Bool = false, delay: TimeInterval = 0.05, completion: @escaping () -> Void) {
         if line == "~" {
             clearText()
             completion()

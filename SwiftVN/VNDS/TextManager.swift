@@ -24,11 +24,19 @@ class TextManager {
         uiNode.addChild(textNode)
     }
     
-    func setText(_ text: String, completion: @escaping () -> Void) {
-        if textNode.isAnimating {
-            textNode.skipAnimation()
+    func setText(_ text: String, animated: Bool = true, wrap: Bool = false, completion: (() -> Void)? = nil) {
+        if animated {
+            if textNode.isAnimating {
+                textNode.skipAnimation()
+            }
+            
+            textNode.addTextWithAnimation(text, wrap: wrap) {
+                completion?()
+            }
+        } else {
+            textNode.setCurrentLine(text, wrap: wrap)
+            completion?()
         }
-        textNode.addTextWithAnimation(text, completion: completion)
     }
     
     func clearText() {

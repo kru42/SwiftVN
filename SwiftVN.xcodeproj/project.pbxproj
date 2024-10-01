@@ -197,8 +197,8 @@
 		78918ACA2CA8C28900632961 /* VNDS */ = {
 			isa = PBXGroup;
 			children = (
-				785C03A62CAC102500C27C66 /* ChoiceManager.swift */,
 				78918AC72CA8C28900632961 /* AudioManager.swift */,
+				785C03A62CAC102500C27C66 /* ChoiceManager.swift */,
 				785C03A22CAB556000C27C66 /* HistoryOverlayNode.swift */,
 				78918ACE2CA8C29200632961 /* NovelScene.swift */,
 				78918AC92CA8C28900632961 /* ScriptExecutor.swift */,
