@@ -292,10 +292,9 @@ class ScriptExecutor: ObservableObject {
         let operation = components[2]
         let comparisonValue = components[3]
         
-        guard let variableValue = variables[varName] ?? globalVariables[varName] else {
-            logger.error("Variable \(varName) not found")
-            fatalError()
-        }
+        let variableValue = (variables[varName] ?? globalVariables[varName]) ?? 0 // else {
+//            logger.warning("Variable \(varName) not found")
+//        }
         
         let condition: Bool
         if let intVariableValue = variableValue as? Int, let intComparisonValue = Int(comparisonValue) {

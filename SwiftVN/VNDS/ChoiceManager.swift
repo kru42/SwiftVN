@@ -12,6 +12,8 @@ class ChoiceManager {
     private var choiceNodes: [SKNode] = []
     private var onSelection: ((Int) -> Void)?
     
+    private let logger = LoggerFactory.shared
+    
     init(scene: SKScene) {
         self.scene = scene
     }
@@ -44,6 +46,9 @@ class ChoiceManager {
         guard let choiceContainer = scene.childNode(withName: "choiceContainer") else { return false }
         
         for (index, choiceNode) in choiceNodes.enumerated() {
+            logger.debug("checking for tap at x: \(position.x), y: \(position.y)")
+            logger.debug("choice node bounds are x: \(choiceNode.frame.minX) - \(choiceNode.frame.maxX), y: \(choiceNode.frame.minY) - \(choiceNode.frame.maxY)")
+            logger.debug("choice container bounds are x: \(choiceContainer.frame.minX) - \(choiceContainer.frame.maxX), y: \(choiceContainer.frame.minY) - \(choiceContainer.frame.maxY)")
             if choiceNode.contains(scene.convert(position, to: choiceNode)) {
                 onSelection?(index + 1)
                 clearChoices()
