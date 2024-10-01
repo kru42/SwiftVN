@@ -27,7 +27,10 @@ struct ContentView: View {
                     .gesture(
                         DragGesture(minimumDistance: 0)
                             .onEnded { value in
-                                scene.handleTap(at: value.location)
+                                // Adjust the y-coordinate before passing it to the SK scene
+                                let adjustedY = UIScreen.main.bounds.height - value.location.y
+                                let adjustedLocation = CGPoint(x: value.location.x, y: adjustedY)
+                                scene.handleTap(at: adjustedLocation)
                             }
                     )
             }

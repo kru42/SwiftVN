@@ -25,12 +25,13 @@ class ChoiceManager {
         choiceContainer.name = "choiceContainer"
         
         for (index, option) in options.enumerated() {
-            let button = SKSpriteNode(color: .blue, size: CGSize(width: 200, height: 50))
+            let button = SKSpriteNode(color: .black.withAlphaComponent(0.8), size: CGSize(width: 200, height: 50))
             button.position = CGPoint(x: 0, y: -CGFloat(index * 60))
             button.name = "choice_\(index)"
             
             let label = SKLabelNode(text: option)
             label.fontColor = .white
+            label.fontName = "HelveticaNeue-Light"
             label.verticalAlignmentMode = .center
             button.addChild(label)
             
@@ -45,16 +46,11 @@ class ChoiceManager {
     func handleTap(at position: CGPoint) -> Bool {
         guard let choiceContainer = scene.childNode(withName: "choiceContainer") else { return false }
         
+        // Convert the tap position to the choiceContainer's coordinate space
+        let localPosition = choiceContainer.convert(position, from: scene)
+        
         for (index, choiceNode) in choiceNodes.enumerated() {
-            logger.debug("checking for tap at x: \(position.x), y: \(position.y)")
-            
-            logger.debug("choice node position converted to scene coords is x: \(choiceNode.convert(choiceNode.position, to: scene).x) - \(choiceNode.convert(choiceNode.position, to: scene).y)")
-            logger.debug("choice node bounds are x: \(choiceNode.frame.minX) - \(choiceNode.frame.maxX), y: \(choiceNode.frame.minY) - \(choiceNode.frame.maxY)")
-            
-            logger.debug("choice container position converted to scene coords is x: \(choiceContainer.convert(choiceContainer.position, to: scene).x) - \(choiceContainer.convert(choiceContainer.position, to: scene).y)")
-            logger.debug("choice container bounds are x: \(choiceContainer.frame.minX) - \(choiceContainer.frame.maxX), y: \(choiceContainer.frame.minY) - \(choiceContainer.frame.maxY)")
-            
-            if choiceNode.contains(scene.convert(position, to: choiceNode)) {
+            if choiceNode.frame.contains(localPosition) {
                 onSelection?(index + 1)
                 clearChoices()
                 return true
