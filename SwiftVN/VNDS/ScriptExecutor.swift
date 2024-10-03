@@ -16,11 +16,14 @@ import SpriteKit
 
 class ScriptExecutor: ObservableObject {
     private var script: [String] = []
-    private var currentLine: Int = 0
-    private var variables: [String: Any] = [:]
-    private var globalVariables: [String: Any] = [:]
     private var labels: [String: Int] = [:]
+    var currentLine: Int = 0
+
+    var variables: [String: Any] = [:]
+    var globalVariables: [String: Any] = [:]
     
+    var scriptName: String = "main.scr"
+
     @Published var isSkipping = false
     @Published var isLoadingMusic = false
     @Published var isWaitingForInput = true
@@ -410,7 +413,7 @@ class ScriptExecutor: ObservableObject {
     
     private func executeJump(_ components: [String]) {
         guard components.count >= 2 else { return }
-        let scriptName = interpolateText(components[1])
+        scriptName = interpolateText(components[1])
         loadScript(named: scriptName)
         currentLine = 0
         

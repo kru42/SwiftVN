@@ -16,14 +16,14 @@ class AudioManager: ObservableObject {
     private var loopPlayer = VLCMediaPlayer()
     private var loopStream: InputStream?
     
-    private let audioQueue = DispatchQueue(label: "com.kru42.SwiftVN.audioqueue")
-    
     private var soundVolume: Int32 = 100
     private var musicVolume: Int32 = 50
     
     private var archiveManager = ArchiveManager(zipFileName: "sound.zip")
     private let logger = LoggerFactory.shared
     
+    var currentMusicPath: String?
+
     private let fileType: [String: String] = [
         "audio/x-aiff": "aiff",
         "audio/x-flac": "flac",
@@ -101,6 +101,8 @@ class AudioManager: ObservableObject {
                 self.logger.critical("Failed to create VLCMedia for music")
                 return
             }
+            
+            self.currentMusicPath = "sound/\(songPath)"
             
             self.musicStreams.append(stream)
             

@@ -7,9 +7,24 @@
 
 import SpriteKit
 
+struct NovelSprite {
+    let path: String
+    let x: CGFloat
+    let y: CGFloat
+}
+
 class SpriteManager {
     private var foregroundArchive = ArchiveManager(zipFileName: "foreground.zip")
     private var backgroundArchive = ArchiveManager(zipFileName: "background.zip")
+    
+//    var backgroundPath = "" {
+//        didSet {
+//            setBackground(path: backgroundPath, withAnimationFrames: nil)
+//        }
+//    }
+    
+    var backgroundPath: String?
+    var spritePaths: [NovelSprite]?
 
     var backgroundNode: SKSpriteNode?
     var imageNodes: [SKSpriteNode] = []
@@ -37,6 +52,8 @@ class SpriteManager {
             if image == nil {
                 fatalError("Could not load background image for \(path)")
             }
+            
+            self.backgroundPath = "background/\(path)"
             
             let texture = SKTexture(image: image!)
             let backgroundNode = SKSpriteNode(texture: texture)
@@ -88,6 +105,8 @@ class SpriteManager {
             guard let image = image else {
                 fatalError("Could not load foreground image for \(name)")
             }
+            
+            self.spritePaths?.append(NovelSprite(path: "foreground/\(name)", x: position.x, y: position.y))
             
             let texture = SKTexture(image: image)
             let foregroundImageNode = SKSpriteNode(texture: texture)

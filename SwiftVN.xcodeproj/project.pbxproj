@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7808E2B82CAEE956003A21D1 /* SaveLoadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7808E2B72CAEE94F003A21D1 /* SaveLoadManager.swift */; };
+		7808E2BB2CAEEE64003A21D1 /* SWXMLHash in Frameworks */ = {isa = PBXBuildFile; productRef = 7808E2BA2CAEEE64003A21D1 /* SWXMLHash */; };
 		7817415F2CA89B9500D0B3B9 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = 7817415E2CA89B9500D0B3B9 /* Logging */; };
 		781A29B92CA7F66900234AF6 /* VLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 781A29B82CA7F66900234AF6 /* VLCKit.xcframework */; };
 		781A29BA2CA7F66900234AF6 /* VLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 781A29B82CA7F66900234AF6 /* VLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -64,6 +66,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7808E2B72CAEE94F003A21D1 /* SaveLoadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveLoadManager.swift; sourceTree = "<group>"; };
 		780EAE3F2CA76481004624B3 /* SwiftVN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftVN.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		780EAE512CA76483004624B3 /* SwiftVNTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftVNTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		780EAE5B2CA76483004624B3 /* SwiftVNUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftVNUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,6 +101,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7808E2BB2CAEEE64003A21D1 /* SWXMLHash in Frameworks */,
 				7817415F2CA89B9500D0B3B9 /* Logging in Frameworks */,
 				781A29B92CA7F66900234AF6 /* VLCKit.xcframework in Frameworks */,
 				7859C39C2CA849C200051A60 /* ZIPFoundation in Frameworks */,
@@ -174,6 +178,7 @@
 		78E2FBF72CAD64F9005D5F4F /* VNDS */ = {
 			isa = PBXGroup;
 			children = (
+				7808E2B72CAEE94F003A21D1 /* SaveLoadManager.swift */,
 				78E2FBEF2CAD64F9005D5F4F /* AudioManager.swift */,
 				78E2FBF02CAD64F9005D5F4F /* ChoiceManager.swift */,
 				78E2FBF12CAD64F9005D5F4F /* HistoryOverlayNode.swift */,
@@ -238,6 +243,7 @@
 			packageProductDependencies = (
 				7859C39B2CA849C200051A60 /* ZIPFoundation */,
 				7817415E2CA89B9500D0B3B9 /* Logging */,
+				7808E2BA2CAEEE64003A21D1 /* SWXMLHash */,
 			);
 			productName = SwiftVN;
 			productReference = 780EAE3F2CA76481004624B3 /* SwiftVN.app */;
@@ -319,6 +325,7 @@
 			packageReferences = (
 				7859C39A2CA849C200051A60 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 				7817415D2CA89B9500D0B3B9 /* XCRemoteSwiftPackageReference "swift-log" */,
+				7808E2B92CAEEE64003A21D1 /* XCRemoteSwiftPackageReference "SWXMLHash" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 780EAE402CA76481004624B3 /* Products */;
@@ -372,6 +379,7 @@
 				78E2FC032CAD64F9005D5F4F /* NovelScene.swift in Sources */,
 				78E2FC042CAD64F9005D5F4F /* ScriptExecutor.swift in Sources */,
 				78E2FC052CAD64F9005D5F4F /* SpriteManager.swift in Sources */,
+				7808E2B82CAEE956003A21D1 /* SaveLoadManager.swift in Sources */,
 				78E2FC062CAD64F9005D5F4F /* TextManager.swift in Sources */,
 				78E2FC072CAD64F9005D5F4F /* TextNode.swift in Sources */,
 				78E2FC082CAD64F9005D5F4F /* ContentView.swift in Sources */,
@@ -719,6 +727,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		7808E2B92CAEEE64003A21D1 /* XCRemoteSwiftPackageReference "SWXMLHash" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/drmohundro/SWXMLHash";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.1.0;
+			};
+		};
 		7817415D2CA89B9500D0B3B9 /* XCRemoteSwiftPackageReference "swift-log" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-log";
@@ -738,6 +754,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		7808E2BA2CAEEE64003A21D1 /* SWXMLHash */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7808E2B92CAEEE64003A21D1 /* XCRemoteSwiftPackageReference "SWXMLHash" */;
+			productName = SWXMLHash;
+		};
 		7817415E2CA89B9500D0B3B9 /* Logging */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 7817415D2CA89B9500D0B3B9 /* XCRemoteSwiftPackageReference "swift-log" */;

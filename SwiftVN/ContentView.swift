@@ -59,6 +59,22 @@ struct ContentView: View {
                     }
                     
                     Button(action: {
+                        _ = scene?.saveLoadManager?.loadState(slot: 0)
+                    }) {
+                        Image(systemName: "square.and.arrow.up")
+                            .foregroundStyle(.white)
+                            .cornerRadius(10)
+                    }
+
+                    Button(action: {
+                        _ = scene?.saveLoadManager?.saveState(slot: 0)
+                    }) {
+                        Image(systemName: "square.and.arrow.down")
+                            .foregroundStyle(.white)
+                            .cornerRadius(10)
+                    }
+                    
+                    Button(action: {
                         showHistoryOverlay.toggle()
                         scene?.toggleHistoryOverlay()
                     }) {
@@ -73,6 +89,7 @@ struct ContentView: View {
                         Image(systemName: "forward.fill")
                             .foregroundStyle(.white)
                             .padding(.horizontal, 5)
+                            .cornerRadius(10)
                     }
                 }
                 .background(Color.black.opacity(0.5))

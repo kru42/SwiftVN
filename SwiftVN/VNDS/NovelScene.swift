@@ -12,6 +12,7 @@ class NovelScene: SKScene, ObservableObject {
     var executor: ScriptExecutor?
     var textManager: TextManager?
     var spriteManager: SpriteManager?
+    var saveLoadManager: SaveLoadManager?
     var historyOverlay: HistoryOverlayNode!
     
     var audioManager = AudioManager()
@@ -29,10 +30,13 @@ class NovelScene: SKScene, ObservableObject {
         historyOverlay.isHidden = true
         
         executor = ScriptExecutor(scene: self)
-        executor?.loadScript(named: "s02.scr")
+        
+        saveLoadManager = SaveLoadManager(scriptExecutor: executor!, scene: self)
+        
+        executor!.loadScript(named: "main.scr")
         
         // Start the script
-        executor?.next()
+        executor!.next()
     }
     
     func handleTap(at location: CGPoint) {
