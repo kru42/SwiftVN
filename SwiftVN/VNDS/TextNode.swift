@@ -167,7 +167,6 @@ class TextNode: SKNode {
             let character = String(characters[i])
             let testLine = currentLine + character
             let testLineSize = (testLine as NSString).size(withAttributes: [NSAttributedString.Key.font: textFont])
-            let lineSize = (currentLine as NSString).size(withAttributes: [NSAttributedString.Key.font: textFont])
 
             // Test if text width is within boundaries - if not so, wrap.
             // Also always wrap if last word is too short
@@ -187,14 +186,25 @@ class TextNode: SKNode {
                         }
                     } else {
                         // Wrap non-Japanese text
-                        let currentWord = wordAtCharacterIndex(index: currentCharacterIndex)
+                        let currentWord = wordAtCharacterIndex(index: i)
                         let testWordSize = ((currentWord ?? "") as NSString).size(withAttributes: [NSAttributedString.Key.font: textFont])
                         
-                        // If the current word is shorter than 7 characters and doesn't fix, wrap without hyphen
-                        if currentWord?.count ?? 7 < 7 && lineSize.width + testWordSize.width > width - 2 * padding {
-                            wrappedLines.append(currentLine)
-                            currentLine = ""
-                        } else if shouldAddHyphen(currentLine: currentLine, nextChar: character) {
+                         let lineSize = (currentLine as NSString).size(withAttributes: [NSAttributedString.Key.font: textFont])
+                        
+//                        if let word = currentWord, word.count < 7 && lineSize.width + testWordSize.width > width - 2 * padding {
+//                            logger.debug("newline at \(word)")
+//                            logger.debug("current character at \(i)")
+//                            wrappedLines.append(currentLine)
+//                            currentLine = character
+//                            continue
+//                        }
+                        
+//                         If the current word is shorter than 7 characters and doesn't fit, wrap without hyphen
+//                        if currentWord?.count ?? 7 < 7 && lineSize.width + testWordSize.width > width - 2 * padding {
+//                            logger.debug("wrapping word \(currentWord ?? "")")
+//                            wrappedLines.append(currentLine)
+//                            currentLine = ""
+                        if shouldAddHyphen(currentLine: currentLine, nextChar: character) {
                             currentLine += "—"
                         } else {
                             wrappedLines.append(currentLine)
@@ -251,15 +261,16 @@ class TextNode: SKNode {
         let text = self.textString
         guard index >= 0 && index < text.count else { return nil }
         
-        // Get the index in the string
         let stringIndex = text.index(text.startIndex, offsetBy: index)
         
-        // Get the range of the word at the given index
-        if let range = text.rangeOfWord(at: stringIndex) {
-            return String(text[range])
-        }
+        // Find the start of the word
+        let wordStart = text[..<stringIndex].lastIndex(where: { !$0.isLetter }) ?? text.startIndex
+        let actualWordStart = text.index(after: wordStart)
         
-        return nil
+        // Find the end of the word
+        let wordEnd = text[stringIndex...].firstIndex(where: { !$0.isLetter }) ?? text.endIndex
+        
+        return String(text[actualWordStart..<wordEnd])
     }
     
     private func isJapaneseCharacter(_ char: String) -> Bool {
