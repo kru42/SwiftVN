@@ -29,7 +29,7 @@ class NovelScene: SKScene, ObservableObject {
         historyOverlay.isHidden = true
         
         executor = ScriptExecutor(scene: self)
-        executor?.loadScript(named: "main.scr")
+        executor?.loadScript(named: "s02.scr")
         
         // Start the script
         executor?.next()
